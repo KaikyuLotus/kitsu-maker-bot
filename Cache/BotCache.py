@@ -1,0 +1,2 @@
+bots = {}
+join_keys = {}
