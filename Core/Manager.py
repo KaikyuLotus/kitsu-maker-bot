@@ -10,14 +10,12 @@
 # 888  Y88b   888 888    "Y8888b. 888  888 888  888 88888888  8888  888    888 888  888 888  888 88888888
 # 888   Y88b  888 Y88b.       X88 Y88  888 888  888 Y8b.            Y88b  d88P Y88..88P Y88b 888 Y8b.
 # 888    Y88b 888  "Y888  88888P'  "Y88888 888  888  "Y8888          "Y8888P"   "Y88P"   "Y88888  "Y8888
+
 import codecs
 import json
 
 from Utils import Logger as Log
-from Core import ThreadedCore as Core
-
-
-pros = [554500728, 395557022]
+from Cache import BotCache
 
 
 def read_bot_list(): return json.loads(open("Files/jsons/bots.json").read())
@@ -42,7 +40,7 @@ def get_bot_count():
 
 def get_bot_instance(bid):
     try:
-        return Core.bots[str(bid)]
+        return BotCache.bots[str(bid)]
     except:
         print("Errore critico, il bot non esiste.")
         return None
@@ -95,9 +93,6 @@ def add_bot(user_id, bot_id, bot_token):
     except Exception as err:
         Log.e(err)
         return False
-
-
-def is_pro(bid): return True if bid in pros else False
 
 
 def get_bots_id():

@@ -4,14 +4,14 @@ import io
 import json
 import shutil
 import time
-
-from Utils import Logger as Log
 import requests
+
 from urllib.parse import quote
+from Utils import Logger as Log
 
 from Core import Unreloaded
-from Core.Error import InvalidKickTime, Unauthorized, NoQuotedMessage,\
-    UnkownError, NotEnoughtRights, BadRequest, NotFound404
+from Core.Error import InvalidKickTime, Unauthorized, NoQuotedMessage, UnkownError, NotEnoughtRights, BadRequest, \
+    NotFound404
 
 base_url = "https://api.telegram.org/bot"
 
@@ -31,7 +31,6 @@ def get_symbol(text):
 
 
 def make_request(method, toke, **kwargs):
-
     req = base_url + toke + "/" + method + "?"
 
     for key, value in kwargs.items():
@@ -65,7 +64,8 @@ def make_request(method, toke, **kwargs):
     return data
 
 
-def make_post(method, toke, chat_id, photo=None, voice=None, document=None, certificate=None, caption=None, reply_to_message_id=None):
+def make_post(method, toke, chat_id, photo=None, voice=None, document=None, certificate=None, caption=None,
+              reply_to_message_id=None):
     url = base_url + toke + "/" + method
     if chat_id:
         url += "?chat_id=" + str(chat_id)
@@ -87,7 +87,8 @@ def make_post(method, toke, chat_id, photo=None, voice=None, document=None, cert
     if not files:
         return
 
-    if reply_to_message_id: url += get_symbol(url) + "reply_to_message_id=%s" % reply_to_message_id
+    if reply_to_message_id:
+        url += get_symbol(url) + "reply_to_message_id=%s" % reply_to_message_id
     if caption:
         url += get_symbol(url) + "caption=%s" % caption
     try:
@@ -108,7 +109,7 @@ def make_post(method, toke, chat_id, photo=None, voice=None, document=None, cert
         Log.e(err)
 
 
-def getUserPhoto(toke, user_id):
+def get_user_photo(toke, user_id):
     # getUserProfilePhotos
     res = make_request("getUserProfilePhotos", toke, user_id=user_id)["result"]
 
@@ -120,7 +121,7 @@ def getUserPhoto(toke, user_id):
     return file_id
 
 
-def getChatPhoto(toke, chat_id):
+def get_chat_photo(toke, chat_id):
     x = io.BytesIO()
     res = make_request("getChat", toke, chat_id=chat_id)["result"]
 
@@ -144,7 +145,7 @@ def getChatPhoto(toke, chat_id):
     return file_id
 
 
-def kickChatMember(toke, chat_id, user_id, until=None):
+def kick_chat_member(toke, chat_id, user_id, until=None):
     if until:
         if until not in bans:
             Log.d("Invalid kick time")
@@ -157,52 +158,57 @@ def kickChatMember(toke, chat_id, user_id, until=None):
                         until_date=until)["result"]
 
 
-def pinMessage(infos, disable_notification=True):
-    if not infos.is_reply: raise NoQuotedMessage
+def pin_message(infos, disable_notification=True):
+    if not infos.is_reply:
+        raise NoQuotedMessage
     res = make_request("pinChatMessage", infos.token, chat_id=infos.cid, message_id=infos.to_user.message.id,
                        disable_notification=disable_notification)
     return res
 
 
-def unpinMessage(infos): return make_request("unpinChatMessage", infos.token, chat_id=infos.cid)
+def unpin_message(infos): return make_request("unpinChatMessage", infos.token, chat_id=infos.cid)
 
 
-def getInviteLink(infos, chat_id=None):
+def get_invite_link(infos, chat_id=None):
     return make_request("exportChatInviteLink", infos.token, chat_id=infos.cid if not chat_id else chat_id)["result"]
 
 
-def setChatTitle(infos):
-    if not infos.is_reply: raise NoQuotedMessage
+def set_chat_title(infos):
+    if not infos.is_reply:
+        raise NoQuotedMessage
     return make_request("setChatTitle", infos.token, chat_id=infos.cid, title=infos.to_user.message.text)
 
 
-def setChatDesc(infos):
-    if not infos.is_reply: raise NoQuotedMessage
+def set_chat_description(infos):
+    if not infos.is_reply:
+        raise NoQuotedMessage
     return make_request("setChatDescription", infos.token, chat_id=infos.cid, description=infos.to_user.message.text)
 
 
-def setChatPhoto(infos):
-    if not infos.is_reply: raise NoQuotedMessage
+def set_chat_photo(infos):
+    if not infos.is_reply:
+        raise NoQuotedMessage
     return make_post("setChatPhoto", infos.token, infos.cid,
                      photo=getFile(infos.token, file_id=infos.to_user.message.item_id, out=io.BytesIO().seek(0)))
 
 
-def getChatAdministrators(toke, chat_id):
+def get_chat_administrators(toke, chat_id):
     return make_request("getChatAdministrators", toke, chat_id=chat_id)["result"]
 
 
-def getChatMember(toke, chat_id, user_id):
+def get_chat_member(toke, chat_id, user_id):
     return make_request("getChatMember", toke, chat_id=chat_id, user_id=user_id)
 
 
-def splitword(w):
-    split = -((-len(w))//2)
+def split_word(w):
+    split = -((-len(w)) // 2)
     return [w[:split], w[split:]]
 
 
-def sendMessage(toke, chat_id, text, reply_to_message_id=None, parse_mode=None, disable_web_page_preview=None, reply_markup=None):
+def send_message(toke, chat_id, text, reply_to_message_id=None, parse_mode=None, disable_web_page_preview=None,
+                 reply_markup=None):
     if len(quote(text)) > 4000:
-        for part in splitword(text):
+        for part in split_word(text):
             if parse_mode:
                 if part.count("*") % 2 != 0:
                     part += "*"
@@ -221,12 +227,11 @@ def sendMessage(toke, chat_id, text, reply_to_message_id=None, parse_mode=None, 
     return
 
 
-def restrictChatMember(toke, chat_id, user_id,
-                       can_send_messages=True,
-                       can_send_media_messages=True,
-                       can_send_other_messages=True,
-                       can_add_web_page_previews=True):
-
+def restrict_chat_member(toke, chat_id, user_id,
+                         can_send_messages=True,
+                         can_send_media_messages=True,
+                         can_send_other_messages=True,
+                         can_add_web_page_previews=True):
     return make_request("restrictChatMember", toke,
                         chat_id=chat_id,
                         user_id=user_id,
@@ -236,17 +241,17 @@ def restrictChatMember(toke, chat_id, user_id,
                         can_add_web_page_previews=can_add_web_page_previews)["result"]
 
 
-def leaveChat(toke, chat_id):
+def leave_chat(toke, chat_id):
     Unreloaded.gbots[str(chat_id)].remove(int(toke.split(":")[0]))
     return make_request("leaveChat", toke, chat_id=chat_id)
 
 
-def sendVoice(toke, chat_id, file_id, reply_to_message_id=None, caption=None):
+def send_voice(toke, chat_id, file_id, reply_to_message_id=None, caption=None):
     return make_post("sendVoice", toke, chat_id, voice=getFile(toke, file_id),
                      reply_to_message_id=reply_to_message_id, caption=caption)
 
 
-def sendSticker(toke, chat_id, sticker=None, reply_to_message_id=None):
+def send_sticker(toke, chat_id, sticker=None, reply_to_message_id=None):
     make_request("sendSticker",
                  toke,
                  sticker=sticker,
@@ -254,7 +259,7 @@ def sendSticker(toke, chat_id, sticker=None, reply_to_message_id=None):
                  reply_to_message_id=reply_to_message_id)
 
 
-def sendPhoto(toke, chat_id, photo, caption=None, reply_to_message_id=None):
+def send_photo(toke, chat_id, photo, caption=None, reply_to_message_id=None):
     if isinstance(photo, io.BytesIO):
         way = make_post
     else:
@@ -266,14 +271,14 @@ def sendPhoto(toke, chat_id, photo, caption=None, reply_to_message_id=None):
                caption=caption)
 
 
-def sendVideo(toke, chat_id, video, caption=None, reply_to_message_id=None):
+def send_video(toke, chat_id, video, caption=None, reply_to_message_id=None):
     return make_request("sendVideo", toke,
                         chat_id=chat_id,
                         reply_to_message_id=reply_to_message_id,
                         video=video, caption=caption)
 
 
-def sendDocument(toke, chat_id, document, caption=None, reply_to_message_id=None):
+def send_document(toke, chat_id, document, caption=None, reply_to_message_id=None):
     return make_request("sendDocument", toke,
                         chat_id=chat_id,
                         reply_to_message_id=reply_to_message_id,
@@ -281,7 +286,7 @@ def sendDocument(toke, chat_id, document, caption=None, reply_to_message_id=None
                         caption=caption)
 
 
-def sendFileDocument(toke, chat_id, document_path, caption=None, reply_to_message_id=None):
+def send_file_document(toke, chat_id, document_path, caption=None, reply_to_message_id=None):
     return make_post("sendDocument", toke,
                      chat_id=chat_id,
                      reply_to_message_id=reply_to_message_id,
@@ -289,18 +294,19 @@ def sendFileDocument(toke, chat_id, document_path, caption=None, reply_to_messag
                      caption=caption)
 
 
-def sendPhotoFile(toke, chat_id, photo, caption=None, reply_to=None):
+def send_photo_file(toke, chat_id, photo, caption=None, reply_to=None):
     return make_post("sendPhoto", toke, chat_id=chat_id, photo=photo,
                      caption=caption, reply_to_message_id=reply_to)
 
 
-def sendChatAction(toke, chat_id, action): return make_request("sendChatAction", toke, chat_id=chat_id, action=action)
+def send_chat_action(toke, chat_id, action): return make_request("sendChatAction", toke, chat_id=chat_id, action=action)
 
 
-def getFileName(toke, file_id): return make_request("getFile", toke, file_id=file_id)["result"]["file_path"].split("/")[1]
+def get_file_name(toke, file_id):
+    return make_request("getFile", toke, file_id=file_id)["result"]["file_path"].split("/")[1]
 
 
-def getFile(toke, file_id,  out=None, file_path=None):
+def get_file(toke, file_id, out=None, file_path=None):
     if not out:
         out = io.BytesIO()
     if not file_path:
@@ -317,11 +323,11 @@ def getFile(toke, file_id,  out=None, file_path=None):
     return out
 
 
-def unbanChatMember(toke, chat_id, user_id):
+def unban_chat_member(toke, chat_id, user_id):
     return make_request("unbanChatMember", toke, chat_id=chat_id, user_id=user_id)
 
 
-def getMe(toke):
+def get_me(toke):
     bot = make_request("getMe", toke)
     if not bot:
         return None
@@ -331,27 +337,62 @@ def getMe(toke):
     return bot
 
 
-def getChat(toke, chat_id):
+def get_chat(toke, chat_id):
     return make_request("getChat", toke, chat_id=chat_id)
 
 
-def setWebhook(toke, certfile, port=8443):
-    print("Setting webhook at: " + "https://35.195.192.65:%s/%s" % (port, toke))
-    return make_post("setWebhook?url=https://35.195.192.65:%s/%s" % (port, toke), toke, None, certificate=open(certfile, "rb"))
+def set_webhook(toke, certfile, port=8443):
+    return make_post("setWebhook?url=https://35.195.192.65:%s/%s" % (port, toke), toke, None,
+                     certificate=open(certfile, "rb"))
 
 
-def deleteWebhook(toke):
+def delete_webhook(toke):
     return make_request("deleteWebhook", toke)
 
 
-def getUpdates(toke, offset=None, timeout=None):
+def get_updates(toke, offset=None, timeout=None):
     return make_request("getUpdates", toke, offset=offset, timeout=timeout)["result"]
 
 
-def editMessageText(toke, chat_id=None, message_id=None, text=None, parse_mode=None):
+def edit_message_text(toke, chat_id=None, message_id=None, text=None, parse_mode=None):
     return make_request("editMessageText", toke, chat_id=chat_id,
                         message_id=message_id, text=text, parse_mode=parse_mode)
 
 
-def deleteMessage(toke, chat_id=None, message_id=None):
+def delete_message(toke, chat_id=None, message_id=None):
     return make_request("deleteMessage", toke, chat_id=chat_id, message_id=message_id)
+
+
+deleteMessage = delete_message
+editMessageText = edit_message_text
+getUpdates = get_updates
+deleteWebhook = delete_webhook
+setWebhook = set_webhook
+getChat = get_chat
+getMe = get_me
+unbanChatMember = unban_chat_member
+getFile = get_file
+getFileName = get_file_name
+sendChatAction = send_chat_action
+sendPhotoFile = send_photo_file
+sendFileDocument = send_file_document
+sendDocument = send_document
+sendVide = send_video
+sendPhoto = send_photo
+sendSticker = send_sticker
+sendVoice = send_voice
+sendVideo = send_video
+leaveChat = leave_chat
+restrictChatMember = restrict_chat_member
+sendMessage = send_message
+getChatMember = get_chat_member
+getChatAdministrators = get_chat_administrators
+setChatPhoto = set_chat_photo
+setChatDescription = set_chat_description
+setChatTitle = set_chat_title
+getInviteLink = get_invite_link
+unpinMessage = unpin_message
+pinMessage = pin_message
+kickChatMember = kick_chat_member
+getChatPhoto = get_chat_photo
+getUserPhoto = get_user_photo

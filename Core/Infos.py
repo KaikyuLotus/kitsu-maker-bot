@@ -22,10 +22,7 @@ from Core import Unreloaded, HTTPLL, Manager
 
 from pprint import pprint
 
-# 554500728
-kaID = 487353090
-kaiID = 554500728
-pros = [554500728, 395557022, 445733633]
+owner_id = 123  # Your ID here
 
 permissions = [
                 "can_change_info", "can_post_messages",
@@ -41,7 +38,6 @@ def blacklista(uid):
     if uid in blacklist:
         return
     blacklist.append(uid)
-    HTTPLL.sendMessage("387366253:AAHf-li7O4anrnSKlpX8ZNRdVagza9fM8a0", kaID, "Utente %s blacklistato." % uid)
     with open("jsons/blacklist.json", "w") as fl:
         fl.write(json.dumps(blacklist))
 
@@ -202,9 +198,9 @@ class User:
         self.is_to_bot = False
         self.is_admin = False
         self.is_owner = True if Manager.get_prop_id(bot["token"]) == self.uid else False
-        if self.uid == kaID:
+        if self.uid == owner_id:
             self.is_owner = True
-        self.is_master = True if self.uid == kaID else False
+        self.is_master = True if self.uid == owner_id else False
         self.sesso = None
         self.lang_n = 0
 
@@ -270,7 +266,6 @@ class Infos:
             bot["symb"] = self.symbol
             self.bot_name = bot["first_name"]
             self.username = bot["username"]
-            self.is_pro = True if self.bid in pros else False
 
             if " " in bot["first_name"]:
                 self.regex = Utils.regexa(bot["first_name"].lower().split()[0])

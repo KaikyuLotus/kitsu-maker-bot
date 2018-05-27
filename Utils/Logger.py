@@ -14,7 +14,6 @@
 
 import time
 import inspect
-import sys
 
 
 def lt(): return time.strftime("%H:%M:%S")
@@ -28,7 +27,6 @@ def printf(tipo, testo, foo):
     with open("Files/logging.txt", "a") as fl:
         fl.write(text + "\n")
     print(text)
-    # if tipo == "Warn  ": return False
     return True
 
 

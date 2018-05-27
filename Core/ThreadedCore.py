@@ -2,6 +2,8 @@ import sys
 import json
 import threading
 
+import time
+
 from Core import Elaborator, Manager, Infos, HTTPLL
 from Core.Error import Unauthorized
 
@@ -141,3 +143,8 @@ def detach_bot(token, bid=None):
 
     Log.i("Bot with %s token stopped." % token)
     return True
+
+
+def idle():
+    while True:
+        time.sleep(10)

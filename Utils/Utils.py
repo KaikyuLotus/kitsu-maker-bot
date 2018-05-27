@@ -456,7 +456,8 @@ def class_text():
                                                                                      "???",
                                                                                      "???")
             n += 1
-            if n == 26: break
+            if n == 26:
+                break
         if wait:
             time.sleep(2)
         return msg

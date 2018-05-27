@@ -1,6 +1,8 @@
 import requests
 from LowLevel import DBs
 
+lastfm_token = "ccb28618868b79c238a20e96c9d5a6d2"
+
 
 class BaseError(Exception):
     def __init__(self, m):
@@ -46,7 +48,7 @@ class EmptyTracks(BaseError):
 
 class LastFM:
     def __init__(self, user_id):
-        self._key = "&api_key=ccb28618868b79c238a20e96c9d5a6d2"
+        self._key = "&api_key=" + lastfm_token
         self._url = "http://ws.audioscrobbler.com/2.0/?"
         self._final = "&format=json&limit=1"
         self._method = "method=user.getrecenttracks"
@@ -63,9 +65,7 @@ class LastFM:
             self.nickname = user_id
             return
 
-        self.nickname = DBs.read_data(user_id, 554500728, "datas")["ext0"]
-        if not self.nickname:
-            raise UnregistredUser()
+        raise UnregistredUser()
 
     def _check_user(self):
         if "message"in self._data:
@@ -100,15 +100,3 @@ class LastFM:
                 if self._data['recenttracks']['track'][0]['@attr']['nowplaying']:
                     return "sta ascoltando"
         return "ha ascoltato"
-
-
-if __name__ == "__main__":
-    print("\n")
-    DBs.set_data(554500728, 487353090, "ext0", None)
-    try:
-        lastfm = LastFM(487353090)
-        print("%s %s %s di %s album %s" % (lastfm.nickname, lastfm.np(), lastfm.title(), lastfm.artist(), lastfm.album()))
-    except UnregistredUser:
-        print("Registrati prima!")
-    except UnvalidUsername:
-        print("Username non valido...")

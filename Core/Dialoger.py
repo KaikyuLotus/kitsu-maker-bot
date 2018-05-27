@@ -26,6 +26,7 @@ from Utils import Logger as Log, Utils
 recursivity = {}
 
 
+# Split this function in more methods
 def send(infos, sezione,
          antispam=True,
          to_id=None,
@@ -254,7 +255,7 @@ def send(infos, sezione,
                 pass
         return True
 
-    except Error.Unauthorized as err:
+    except Error.Unauthorized:
         if not to_id:
             Log.e("Qualcosa non va, l'ID era None...")
             return "ERR"

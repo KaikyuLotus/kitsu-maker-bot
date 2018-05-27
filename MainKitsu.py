@@ -21,13 +21,15 @@ from LowLevel.LowLevel import get_time
 
 
 def run():
+    Log.i("Starting Kitsu, version 3.0.")
+    token = "TOKEN"
+    your_id = 123  # Your Telegram user ID
     ts = time.time()
     Core.attach_bot(Manager.get_token_list(), clean=True)
     Log.d("Booted in %s ms..." % get_time(ts))
-    HTTPLL.sendMessage("569510835:AAFqUXOd0wNoFkL4-InHDznJyL111yJXOtI", 487353090, "Booted in %s ms..." % get_time(ts))
-    # Core.run()
+    HTTPLL.sendMessage(token, your_id, "Booted in %s ms..." % get_time(ts))
+    Core.idle()
 
 
 if __name__ == "__main__":
-    Log.i("Starting Kitsu, version 3.0.")
     run()

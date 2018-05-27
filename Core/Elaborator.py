@@ -368,7 +368,8 @@ def command_reader(infos):
 
         return "procedi"
     except Exception as err:
-        Log.e("Ho trovato un errore: riga %s %s %s (%s)" % (sys.exc_info()[-1].tb_lineno, type(err).__name__, err, infos.text))
+        Log.e("Ho trovato un errore: riga %s %s %s (%s)" % (sys.exc_info()[-1].tb_lineno, type(err).__name__, err,
+                                                            infos.text))
         infos.reply("C-c'è stato un errore...\nInoltra a @Kaikyu il tuo ultimo messaggio!")
 
 
@@ -388,7 +389,8 @@ def pers_commands(infos):
                     return Dialoger.send(infos, trigger, antispam=False)
         else:
             if re.search("^%s$" % escape(trigger), command):
-                if Unreloaded.antispam(infos): return
+                if Unreloaded.antispam(infos):
+                    return
                 return Dialoger.send(infos, trigger, antispam=False)
 
     if infos.chat_private:
