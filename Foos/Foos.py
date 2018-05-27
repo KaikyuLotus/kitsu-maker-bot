@@ -10,7 +10,7 @@
 # 888  Y88b   888 888    "Y8888b. 888  888 888  888 88888888  8888  888    888 888  888 888  888 88888888
 # 888   Y88b  888 Y88b.       X88 Y88  888 888  888 Y8b.            Y88b  d88P Y88..88P Y88b 888 Y8b.
 # 888    Y88b 888  "Y888  88888P'  "Y88888 888  888  "Y8888          "Y8888P"   "Y88P"   "Y88888  "Y8888
-
+import json
 import os
 import pprint
 import re
@@ -21,22 +21,30 @@ import schedule
 from Cache import BotCache
 from LowLevel import DBs, LowLevel
 from Utils import Logger as Log, Utils
-from Core import HTTPLL, Core, Manager, Dialoger
+from Core import HTTPLL, Manager, Dialoger
+from Core import ThreadedCore as Core
 
 ver = "0.8"
-kaID = 52962566
+kaID = 487353090
 groupID = -1001141699210
 chan_id = -1001141066491
 max_bots = 1000
-kitsu_token = "447458418:AAEVPQHV16VogYINta2M58a0oSF8AW2gRWI"
+kitsu_token = "569510835:AAFqUXOd0wNoFkL4-InHDznJyL111yJXOtI"
 
+# Kaikyu, Veiler, Kurama, Yuki, Brain not found, YTGames
+# auth = [487353090, 134585585, 156343027, 197896791, 224252010, 165594005]
+
+f = open("Files/jsons/auths.json", "r")
+auth = json.loads(f.read())
+f.close()
 
 limits = {
-          52962566: 10,  # Kaikyu
-          134585585: 3,  # Veiler
-          156343027: 2,  # Kurama
-          197896791: 2   # Yuki
-          }
+    487353090: 10,  # Kaikyu
+    134585585: 1,   # Veiler
+    156343027: 1,   # Kurama
+    197896791: 1,   # Yuki
+    165594005: 1    # YTGames
+}
 
 
 def escape_markdown(text): return re.sub(r'([%s])' % '\*_`\[', r'\\\1', text)
@@ -49,6 +57,71 @@ def restart(infos):
     os.execv(sys.executable, ['python35'] + sys.argv)
 
 
+def send_message(infos):
+    try:
+        args = infos.text.split(" ")
+        HTTPLL.sendMessage(infos.token, args[0], infos.text.replace(args[0], ""))
+    except Exception as err:
+        HTTPLL.sendMessage(infos.token, kaID, str(err))
+
+
+def help(infos):
+    try:
+        if infos.user.uid not in auth:
+            return
+
+        string = "%s [@%s] (%s) ha detto:\n%s" % (infos.user.name, infos.user.username, infos.user.uid, infos.text)
+        HTTPLL.sendMessage(infos.token, kaID, string)
+    except Exception as err:
+        HTTPLL.sendMessage(infos.token, kaID, str(err))
+
+
+def notice(infos):
+    if infos.text == "":
+        return infos.reply("Cosa dovrei dire...?")
+
+    infos.text = infos.text.replace("[_]", "\n")
+
+    HTTPLL.sendMessage(infos.token, kaID, infos.text)
+
+    bids = Manager.get_bots_id()
+    for bid in bids:
+        token = Manager.get_token_from_bot_id(bid)
+        uid = Manager.get_prop_id(token)
+        try:
+            HTTPLL.sendMessage(infos.token, uid, infos.text)
+        except Exception as err:
+            Log.w("%s notice unauth" % uid)
+
+    HTTPLL.sendMessage(infos.token, kaID, "Avviso importante inviato.")
+
+
+def add_auth(infos):
+    global auth
+    if infos.text == "":
+        return infos.reply("ID da autorizzare mancante.")
+
+    if not infos.text.isdigit():
+        return infos.reply("ID da autorizzare non valido.")
+
+    aid = int(infos.text)
+
+    file = open("Files/jsons/auths.json", "r")
+    auths = json.loads(file.read())
+    file.close()
+
+    if aid in auths:
+        return infos.reply("ID da autorizzare già autorizzato.")
+
+    auths.append(aid)
+
+    file = open("Files/jsons/auths.json", "w")
+    file.write(json.dumps(auths))
+
+    auth = auths
+    infos.reply("L'ID %s non ha più il gay." % aid)
+
+
 def scheduler():
     Log.i("Schedule impostati!")
     while True:
@@ -59,24 +132,10 @@ def scheduler():
 def start(infos):
     global max_bots
     if DBs.add_user(infos):
-        txt = "Avviato da %s per la prima volta!" % infos.user.username
+        txt = "Avviato da %s per la prima volta." % infos.user.username
         Dialoger.send(infos, "", special_text=txt, to_id=kaID)
-    else:
-        Log.d("Questo utente era già registrato")
 
-    text = "Benvenuto *%s*, kitsu! ~\n\n" % infos.user.name
-    text += "Io sono *Kitsu*, la tua assistente per *Bot Forge*! ~\n\nTi starai sicuramente chiedendo di cosa sto parlando...\n "
-    text += "*Bot Forge* è il progetto creato da [Kaikyu](t.me/Kaikyu) che permette la creazione di chatbot su"
-    text += "Telegram *stabili, veloci* e *sempre online!*\n\nSe non ci credi dai un'occhiata su @KitsuRankings, kitsu! ;3\n\n "
-    text += "Al momento ci sono solo *%s* bot online su un massimo di ben *%s*!\n" % (Manager.get_bot_count(), max_bots)
-    text += "...*%s*?? ...  ...  ...\nAh si!\nIl mio creatore, [Kaikyu](t.me/Kaikyu), ha modificato il mio *Core* ricostruendolo *dalle fondamenta*, ora sono più *ottimizzata* che mai, ogni *KitsuBot* utilizza solo *0,39MB* di *RAM*!" % max_bots
-    text += "\n\nAh, prima che me ne dimentichi, [questa](telegra.ph/Come-creare-un-KitsuBot-08-20) è una guida sul mio funzionamento, *potrebbe interessarti*!\n\n "
-    if Manager.get_bot_count() >= max_bots:
-        text += "Al momento non è possibile creare nuovi bot...\n" \
-                "Però puoi controllare che bot funzionano grazie a me al momento!\n" \
-                "Usa /botlist per avere la lista ~\n\n"
-
-    text += "Segui il canale @KitsuneCode per *aggiornamenti* ~"
+    text = "Benvenuto *%s*, se vuoi utilizzarmi esegui il comando /newbot" % infos.user.name
 
     infos.reply(text, markdown=True, disable_web_page_preview=True)
 
@@ -86,30 +145,36 @@ def newbot(infos):
     uid = infos.user.uid
     say = infos.reply
 
+    if uid not in auth:
+        say("Per potermi utilizzare devi effettuare una donazione a PayPal.me/KaikyuDev di 5 euro,"
+            "includendo come messaggio il tuo ID, se non sai il tuo ID esegui il comando /myid.\n\n"
+            "I server, così come il tempo, hanno un valore.")
+        return
+
     if uid in limits:
         limit = limits[uid]
     else:
         limit = 1
 
     if infos.text == "token":
-        say("B-baka, non devi scrivere \"token\", devi darmi la **token** del tuo **bot**!", markdown=True)
+        say("Non devi scrivere \"token\", devi darmi la **token** del tuo **bot**.", markdown=True)
         HTTPLL.sendMessage(infos.token, kaID, "@%s ha usato /newbot \"token\" lol" % infos.user.username)
         return
 
     if Manager.get_bot_count() >= max_bots and "!!" not in infos.text:
-        say("Tutti i posti sono stati occupati!\nSegui @KitsuneCode per sapere quando ce ne saranno altri ~")
+        say("Tutti i posti sono stati occupati.\nSegui @KitsuneCode per sapere quando ce ne saranno altri ~")
         return
 
     msg = "Nuovo bot da %s (ID: %s)" % (user, uid)
 
     if infos.text == "":
-        say("La sintassi del comando è semplice:\n/newbot token\nRiprova!")
+        say("La sintassi del comando è semplice:\n/newbot token\nRiprova...")
         return Log.a("[Bot: @%s | %s] user: %s ID: %s 'newbot senza chiave'" % (infos.username, infos.bid, user, uid))
 
     key = infos.text.replace("!!", "")
     if Manager.is_token_used(key):
         Log.a("[Bot: @%s | %s] user: %s ID: %s 'newbot chiave usata'" % (infos.username, infos.bid, user, uid))
-        return say("Kitsu!\nQuesta chiave è già usata!\nSe credi che ci sia un errore, contatta @Kaikyu!")
+        return say("Questa chiave è già usata...")
 
     if Manager.count_bots(uid) >= limit:
         Log.a("[Bot: @%s | %s] user: %s ID: %s 'newbot utente ha già un bot'" % (infos.username, infos.bid, user, uid))
@@ -121,7 +186,7 @@ def newbot(infos):
 
     try:
         tbot = HTTPLL.getMe(key)
-        txt = "Eccomi master.\nEcco una [guida](%s) su come funziono.\nUnisciti al [gruppo ufficiale](%s) per avere " \
+        txt = "Eccomi master.\nQuesta è una [guida](%s) sul miofunzionamento.\nUnisciti al [gruppo ufficiale](%s) per avere " \
               "le novità in tempo reale." % ("telegra.ph/Come-creare-un-KitsuBot-08-20", "t.me/KitsuBotsGroup")
         HTTPLL.sendMessage(key, uid, text=txt, parse_mode="markdown")
         msg += "\nHa usato la token %s\n" % key
@@ -309,6 +374,4 @@ def reset_classifica(infos):
 
 def spegni(infos):
     HTTPLL.sendMessage(infos.token, infos.cid, "Rebooting...")
-    name = "MainKitsu.py"
-    kill = "pkill -f %s" % name
-    os.system("echo Kaikyudev1! | sudo -S %s" % kill)
+    os.system("pkill -9 python3.6")

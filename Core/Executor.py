@@ -10,7 +10,7 @@ from LowLevel.KaiDBs import *
 
 from Core import HTTPLL, Dialoger as endPoint
 
-kaID = 52962566
+kaID = 487353090
 zwnj = "‌"
 
 

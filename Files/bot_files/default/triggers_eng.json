@@ -1,0 +1,23 @@
+{
+  "equals": [],
+  "eteractions": [],
+  "interactions": [],
+  "bot_commands": [],
+  "contents": [],
+  "admin_actions": [],
+  "day_parts": [
+    "good morning|ohayou|'morning",
+    "good evening|konbanwa|'evening",
+    "good afternoon|'afternoon",
+    "good night|'night|oyasum"
+  ],
+  "giorno": "good_morning 'morning",
+  "insulti": "suck ugly stupid bastard dickhead donkey lardass wimp you're_zero cunt cum ass vagina vaginal fuck_you shitty",
+  "saluti": "hey hi hello sup",
+  "ringraziamenti": "usefull thanks arigatou arigato tnx thank",
+  "notte": "'night good_night",
+  "bene": "i_like_you i_like_you_a_lot",
+  "amare": "love_you lovvo daisuki",
+  "complimenti": "good cute adorable kawaii beauty beautifull nice great best cuddly perfect wonderfull kind splendida special",
+  "scuse": "don't_mind sorry gomenasai sorry sry"
+}

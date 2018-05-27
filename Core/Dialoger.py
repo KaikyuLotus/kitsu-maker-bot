@@ -108,11 +108,9 @@ def send(infos, sezione,
             return BotsFoos.unwarn(infos)
 
         if "+exe+" in text:
+            infos.master_message("Master, +exe+ is deprecated:\n`" + text + "`\nIn `" + sezione + "`",
+                                 parse_mode="markdown")
             Log.a("[%s] U: %s %s" % (infos.bot_name, infos.user.username, sezione))
-            try:
-                return eval("Executor." + text.split("||")[1])
-            except Exception as err:
-                Log.e("Errore: %s" % err)
             return
 
         if not ignore_specials:
@@ -236,7 +234,6 @@ def send(infos, sezione,
                 text = text.replace(res.group(), res.group(0).replace("\_", "_"))
 
         HTTPLL.sendChatAction(infos.token, to_id, 'typing')
-        time.sleep(0.2)
         HTTPLL.sendMessage(infos.token, chat_id=to_id, text=text, parse_mode=parse,
                            disable_web_page_preview=no_prew, reply_to_message_id=quote, reply_markup=kb)
 

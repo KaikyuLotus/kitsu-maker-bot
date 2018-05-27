@@ -22,10 +22,10 @@ from Core import Unreloaded, HTTPLL, Manager
 
 from pprint import pprint
 
-kaID = 52962566
-kaiID = 254429240
-whiteID = 395557022
-pros = [254429240, 395557022, 445733633]
+# 554500728
+kaID = 487353090
+kaiID = 554500728
+pros = [554500728, 395557022, 445733633]
 
 permissions = [
                 "can_change_info", "can_post_messages",
@@ -49,7 +49,7 @@ def blacklista(uid):
 def get_message(update):
 
     if "edited_channel_post" in update:
-        return update["edited_channel_post"], False, "edited_channel_post"
+        return None, False, None  # return update["edited_channel_post"], False, "edited_channel_post"
 
     if "channel_post" in update:
         return update["channel_post"], False, "channel_post"
@@ -58,7 +58,7 @@ def get_message(update):
         return update["message"], False, "message"
 
     if "edited_message" in update:
-        return update["edited_message"], True, "edited message"
+        return None, False, None  # return update["edited_message"], True, "edited message"
 
     else:
         Log.w("Non un update valido: %s" % update)
@@ -66,9 +66,7 @@ def get_message(update):
 
 
 def get_admin(token, cid, uid):
-    admins = Unreloaded.get_admin_ids(cid, token)
-    # if uid not in [admin["id"] for admin in admins]: return
-    for admin in admins:
+    for admin in Unreloaded.get_admin_ids(cid, token):
         if admin["user"]["id"] == uid:
             return admin
     return None
@@ -249,9 +247,10 @@ class Infos:
             self.error = False
 
             if not message:
-                self.error = True
+                self.skip = True
                 return
 
+            self.skip = False
             self.prop_id = Manager.get_prop_id(bot["token"])
             self.what = what
             self.token = bot["token"]
@@ -289,7 +288,7 @@ class Infos:
             self.to_user = None
             self.is_auto = False
 
-            self.is_kitsu = False if 447458418 != self.bid else True
+            self.is_kitsu = False if 569510835 != self.bid else True
 
             if "from" in message:
                 self.user = User(bot, message["from"], message)
@@ -356,3 +355,6 @@ class Infos:
         return HTTPLL.sendMessage(self.token, self.cid, text,
                                   reply_to_message_id=self.user.message.id if quote else None,
                                   parse_mode="markdown" if markdown else None, **kwargs)
+
+    def master_message(self, text, parse_mode=None):
+        return HTTPLL.sendMessage(self.token, self.prop_id, text, parse_mode=parse_mode)

@@ -24,13 +24,14 @@ import os
 
 from Foos import Commands
 from Utils import Utils, Logger as Log
-from Core import HTTPLL, Core, Unreloaded, Dialoger, Manager
+from Core import HTTPLL, Unreloaded, Dialoger, Manager
+from Core import ThreadedCore as Core
 from Core.Infos import Infos
 from Core.Dialoger import send
 from Cache import BotCache
 from LowLevel import LowLevel, DBs
 
-kaID = 52962566
+kaID = 487353090
 chars = "abcdefghijklmnopqrstuwxyz"
 
 
@@ -139,8 +140,8 @@ def startb(infos):
         Dialoger.send(infos, None, special_text=txt, to_id=infos.prop_id)
 
     text =  "\n\n_______________________"
-    text += "\n<b>Bot creato con</b> <link>t.me/KitsuMakerBot:>Kitsu</link>!"
-    text += "\n<link>t.me/KitsuneCode:>KitsuneCode</link>"
+    text += "\n<b>Bot creato con</b> <link>t.me/ChatbotMakerBot:>Syntaxer</link>!"
+    text += "\n<link>t.me/Kaikyu:>Kaikyu Lotus Channel</link>"
 
     Dialoger.send(infos, "start", add=text)
 

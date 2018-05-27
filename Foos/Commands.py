@@ -22,7 +22,8 @@ from Utils import Logger as Log
 import base64
 import time
 
-from Core import HTTPLL, Manager, Core
+from Core import HTTPLL, Manager
+from Core import ThreadedCore as Core
 from Cache import BotCache
 from Core.Error import NotFound404
 

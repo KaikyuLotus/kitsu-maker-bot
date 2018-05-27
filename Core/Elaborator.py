@@ -21,6 +21,7 @@ from Utils import Logger as Log
 
 
 master_commands = {
+                   "send_message": Foos.send_message,
                    "reset_classifica": Foos.reset_classifica,
                    "detach_bot": Foos.detach_bot,
                    "attach_bot": Foos.attach_bot,
@@ -30,6 +31,8 @@ master_commands = {
                    "mcast": Foos.mcast,
                    "proprietario": BotsFoos.proprietary,
                    "reboot": Foos.spegni,
+                   "auth": Foos.add_auth,
+                   "notice": Foos.notice
                    }
 
 kitsu_commands = {
@@ -37,7 +40,8 @@ kitsu_commands = {
                    "restart": Foos.restart,
                    "newbot": Foos.newbot,
                    "botlist": Foos.bot_list,
-                   "change_token": Commands.change_token
+                   "change_token": Commands.change_token,
+                   "help": Foos.help
                   }
 
 bot_master_comm = {

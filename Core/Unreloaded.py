@@ -52,7 +52,7 @@ antisp = {}
 scores = {}
 gbots = {}
 
-kaID = 52962566
+kaID = 487353090
 
 p = psutil.Process(os.getpid())
 
@@ -135,7 +135,7 @@ def reset_scores():
 def rankings():
     Log.d("Rankings foo started.")
     time.sleep(5)
-    kt = "447458418:AAEVPQHV16VogYINta2M58a0oSF8AW2gRWI"
+    kt = "569510835:AAHskMqSa02KAditTfztt3KuHtE9oFQRYGs"
     rc = -1001110825751
     try:
         oldid = open("Files/jsons/ranking_msg_id").read()

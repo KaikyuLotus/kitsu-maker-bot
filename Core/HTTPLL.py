@@ -10,7 +10,8 @@ import requests
 from urllib.parse import quote
 
 from Core import Unreloaded
-from Core.Error import InvalidKickTime, Unauthorized, NoQuotedMessage, UnkownError, NotEnoughtRights, BadRequest, NotFound404
+from Core.Error import InvalidKickTime, Unauthorized, NoQuotedMessage,\
+    UnkownError, NotEnoughtRights, BadRequest, NotFound404
 
 base_url = "https://api.telegram.org/bot"
 
@@ -25,7 +26,8 @@ def inline_keyboard(btns):
     return json.dumps({"inline_keyboard": btns})
 
 
-def get_symbol(text): return "" if text.endswith("?") else "&"
+def get_symbol(text):
+    return "" if text.endswith("?") else "&"
 
 
 def make_request(method, toke, **kwargs):
@@ -334,6 +336,7 @@ def getChat(toke, chat_id):
 
 
 def setWebhook(toke, certfile, port=8443):
+    print("Setting webhook at: " + "https://35.195.192.65:%s/%s" % (port, toke))
     return make_post("setWebhook?url=https://35.195.192.65:%s/%s" % (port, toke), toke, None, certificate=open(certfile, "rb"))
 
 
@@ -341,7 +344,8 @@ def deleteWebhook(toke):
     return make_request("deleteWebhook", toke)
 
 
-def getUpdates(toke, offset=None, timeout=None): return make_request("getUpdates", toke, offset=offset, timeout=timeout)["result"]
+def getUpdates(toke, offset=None, timeout=None):
+    return make_request("getUpdates", toke, offset=offset, timeout=timeout)["result"]
 
 
 def editMessageText(toke, chat_id=None, message_id=None, text=None, parse_mode=None):

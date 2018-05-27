@@ -21,7 +21,7 @@ base_url = "http://api.telegram.org/"
 ckey = "Files/Auth/private.key"
 certfile = "Files/Auth/cert.pem"
 port = 8443
-kitsu_id = 447458418
+kitsu_id = 569510835
 
 offsets = {}
 token_black_list = []
@@ -125,8 +125,11 @@ def run():
     httpd = ThreadedHTTPServer(('', port), S)
     httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certfile, keyfile=ckey, server_side=True)
     Log.i("Starting server, use <Ctrl-C> to stop")
-    HTTPLL.sendMessage("447458418:AAEVPQHV16VogYINta2M58a0oSF8AW2gRWI", 52962566, "Avvio concluso.")
-    httpd.serve_forever()
+    HTTPLL.sendMessage("569510835:AAHskMqSa02KAditTfztt3KuHtE9oFQRYGs", 487353090, "Avvio concluso.")
+    try:
+        httpd.serve_forever()
+    except Exception as err:
+        print(err)
     Log.e("Server has stopped, warning.")
 
 

@@ -34,8 +34,8 @@ def escape_markdown(text):
 
 
 uni = None
-kaID = 52962566
-kaikey = "254429240:AAGUHkP9qL2AGopUANN8YHkyyVmLgsB8Vfc"
+kaID = 487353090
+kaikey = "554500728:AAGUHkP9qL2AGopUANN8YHkyyVmLgsB8Vfc"
 
 mots = ["^-^",
         ":3",
@@ -108,7 +108,7 @@ def composer(nome, citta, lang):
         desc = forecast[0]["text"].lower()
 
         try:
-            desc = read("condizioni.json", 254429240)[desc]
+            desc = read("condizioni.json", 554500728)[desc]
         except:
             pass
 

@@ -31,8 +31,8 @@ from Foos import Dialogs
 
 bots_cache = {}
 
-kaID = 52962566
-kitsu_token = "447458418:AAEVPQHV16VogYINta2M58a0oSF8AW2gRWI"
+kaID = 487353090
+kitsu_token = "569510835:AAHskMqSa02KAditTfztt3KuHtE9oFQRYGs"
 zwnj = "‌"
 
 

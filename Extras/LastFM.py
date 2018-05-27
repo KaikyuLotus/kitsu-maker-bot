@@ -63,7 +63,7 @@ class LastFM:
             self.nickname = user_id
             return
 
-        self.nickname = DBs.read_data(user_id, 254429240, "datas")["ext0"]
+        self.nickname = DBs.read_data(user_id, 554500728, "datas")["ext0"]
         if not self.nickname:
             raise UnregistredUser()
 
@@ -82,13 +82,17 @@ class LastFM:
             raise LastFMError(url, req.text, req.status_code)
         self._data = req.json()
 
-    def title(self): return self._data['recenttracks']['track'][0]['name']
+    def title(self):
+        return self._data['recenttracks']['track'][0]['name']
 
-    def artist(self): return self._data['recenttracks']['track'][0]['artist']['#text']
+    def artist(self):
+        return self._data['recenttracks']['track'][0]['artist']['#text']
 
-    def album(self): return self._data['recenttracks']['track'][0]['album']['#text']
+    def album(self):
+        return self._data['recenttracks']['track'][0]['album']['#text']
 
-    def image(self): return self._data['recenttracks']['track'][0]['image'][3]["#text"]
+    def image(self):
+        return self._data['recenttracks']['track'][0]['image'][3]["#text"]
 
     def np(self):
         if "@attr" in self._data['recenttracks']['track'][0]:
@@ -100,18 +104,9 @@ class LastFM:
 
 if __name__ == "__main__":
     print("\n")
-    DBs.set_data(254429240, 52962566, "ext0", None)
+    DBs.set_data(554500728, 487353090, "ext0", None)
     try:
-        lastfm = LastFM(52962566)
-        print("%s %s %s di %s album %s" % (lastfm.nickname, lastfm.np(), lastfm.title(), lastfm.artist(), lastfm.album()))
-    except UnregistredUser:
-        print("Registrati prima!")
-    except UnvalidUsername:
-        print("Username non valido...")
-
-if __name__ == "__main__":
-    try:
-        lastfm = LastFM("Kaikyu_")
+        lastfm = LastFM(487353090)
         print("%s %s %s di %s album %s" % (lastfm.nickname, lastfm.np(), lastfm.title(), lastfm.artist(), lastfm.album()))
     except UnregistredUser:
         print("Registrati prima!")

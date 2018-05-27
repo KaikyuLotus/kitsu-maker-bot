@@ -14,10 +14,10 @@ import codecs
 import json
 
 from Utils import Logger as Log
-from Core import Core
+from Core import ThreadedCore as Core
 
 
-pros = [254429240, 395557022]
+pros = [554500728, 395557022]
 
 
 def read_bot_list(): return json.loads(open("Files/jsons/bots.json").read())

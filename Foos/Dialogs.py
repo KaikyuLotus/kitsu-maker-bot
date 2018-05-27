@@ -12,7 +12,7 @@ def get_text(infos, sezione):
     try:
         sezione = sezione.lower()
 
-        if infos.bid == 254429240 and infos.user.uid in [276804260] and sezione == "i'm back":
+        if infos.bid == 554500728 and infos.user.uid in [276804260] and sezione == "i'm back":
             sezione += " moon"
 
         dialogs = LowLevel.jfile("d", infos.bid, infos.user.lang_n)

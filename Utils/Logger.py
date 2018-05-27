@@ -27,6 +27,7 @@ def printf(tipo, testo, foo):
     text = "[ %s ] %s - [from: %s] - %s" % (tipo, lt(), foo, testo)
     with open("Files/logging.txt", "a") as fl:
         fl.write(text + "\n")
+    print(text)
     # if tipo == "Warn  ": return False
     return True
 
@@ -35,6 +36,7 @@ def printe(text):
     with open("Files/errors.txt", "a") as fl:
         fl.write(text + "\n")
         fl.close()
+    print(text)
 
 
 def d(text): printf("Debug ", text, call_elab(inspect.stack()[1][3]))
