@@ -2,15 +2,6 @@
 
 # Copyright (c) 2017 Kaikyu
 
-# 888    d8P  d8b 888                                                .d8888b.                888
-# 888   d8P   Y8P 888                                               d88P  Y88b               888
-# 888  d8P        888                                               888    888               888
-# 888d88K     888 888888 .d8888b  888  888 88888b.   .d88b.         888         .d88b.   .d88888  .d88b.
-# 8888888b    888 888    88K      888  888 888 "88b d8P  Y8b        888        d88""88b d88" 888 d8P  Y8b
-# 888  Y88b   888 888    "Y8888b. 888  888 888  888 88888888  8888  888    888 888  888 888  888 88888888
-# 888   Y88b  888 Y88b.       X88 Y88  888 888  888 Y8b.            Y88b  d88P Y88..88P Y88b 888 Y8b.
-# 888    Y88b 888  "Y888  88888P'  "Y88888 888  888  "Y8888          "Y8888P"   "Y88P"   "Y88888  "Y8888
-
 import codecs
 import json
 
@@ -18,16 +9,20 @@ from Utils import Logger as Log
 from Cache import BotCache
 
 
-def read_bot_list(): return json.loads(open("Files/jsons/bots.json").read())
+def read_bot_list():
+    return json.loads(open("Files/jsons/bots.json").read())
 
 
-def get_token_list(): return [key for key in json.loads(open("Files/jsons/bots.json").read())]
+def get_token_list():
+    return [key for key in json.loads(open("Files/jsons/bots.json").read())]
 
 
-def is_token_used(token): return True if token in json.loads(open("Files/jsons/bots.json").read()) else False
+def is_token_used(token):
+    return True if token in json.loads(open("Files/jsons/bots.json").read()) else False
 
 
-def get_online_bots(): return json.loads(open("Files/jsons/stats.json").read())["online_bots"]
+def get_online_bots():
+    return json.loads(open("Files/jsons/stats.json").read())["online_bots"]
 
 
 def get_bot_count():
@@ -85,6 +80,8 @@ def add_bot(user_id, bot_id, bot_token):
     try:
         new = {"user_id": user_id, "bot_id": bot_id}
         bots = json.loads(open("Files/jsons/bots.json").read())
+        if bot_token in bots:
+            return False
         bots[bot_token] = new
         Log.d("Nuovo bot (%s) aggiunto al file bots" % bot_id)
         with open("Files/jsons/bots.json", "w") as fl:

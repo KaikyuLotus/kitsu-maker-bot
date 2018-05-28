@@ -128,8 +128,6 @@ def del_trigger(token, trigger, t_type, lang_n):
             triggers = "triggers.json"
             dialogs = "dialogs.json"
 
-        lang_itm = "IT" if lang_n == 0 else "EN"
-
         if trigger == "":
             return "Devi specificare il trigger da cui eliminare le risposte.", False
 
@@ -192,8 +190,6 @@ def add_risposta(token, trigger, replies, lang_n):
         else:
             dialogs = "dialogs.json"
 
-        lang_itm = "IT" if lang_n == 0 else "EN"
-
         if replies == "":
             return "Devi specificare la sezione/trigger a cui aggiungere la/e risposte.", False
 
@@ -220,7 +216,7 @@ def add_risposta(token, trigger, replies, lang_n):
         dials = json.loads(open("Files/bot_files/%s/%s" % (bid, dialogs)).read())
         try:
             dials[trigger].extend(frasi)
-        except Exception as err:
+        except Exception:
             return "Non ho trovato il trigger/sezione %s." % trigger, False
 
         com = " ".join(frasi)
@@ -324,8 +320,6 @@ def del_risps(token, section, lang_n=None):
         else:
             dialogs = "dialogs.json"
 
-        lang_itm = "IT" if lang_n == 0 else "EN"
-
         if section == "":
             return "Devi specificare la sezione/trigger da cui eliminare le risposte.", False
 
@@ -353,8 +347,6 @@ def del_risps(token, section, lang_n=None):
 # ok
 def list_risps(infos):
     say = infos.reply
-    user = infos.user.username
-    uid = infos.user.uid
     try:
 
         if infos.user.lang_n != 0:
@@ -399,16 +391,12 @@ def list_risps(infos):
 
 def list_risps_form(infos):
     say = infos.reply
-    user = infos.user.username
-    uid = infos.user.uid
     try:
 
         if infos.user.lang_n != 0:
             dialogs = "dialogs_eng.json"
         else:
             dialogs = "dialogs.json"
-
-        lang_itm = "IT" if infos.user.lang_n == 0 else "EN"
 
         if infos.text == "":
             say("Devi specificare il trigger per cui listare le risposte.")
@@ -448,10 +436,8 @@ def del_default(infos):
 
         if infos.user.lang_n != 0:
             triggers = "triggers_eng.json"
-            dialogs = "dialogs_eng.json"
         else:
             triggers = "triggers.json"
-            dialogs = "dialogs.json"
 
         lang_itm = "IT" if infos.user.lang_n == 0 else "EN"
 
@@ -509,10 +495,8 @@ def list_default(token, text, lang_n):
 
         if lang_n != 0:
             triggers = "triggers_eng.json"
-            dialogs = "dialogs_eng.json"
         else:
             triggers = "triggers.json"
-            dialogs = "dialogs.json"
 
         lang_itm = "IT" if lang_n == 0 else "EN"
 
@@ -547,13 +531,9 @@ def set_nascita(infos):
         data_nascita = infos.text.lower()
 
         if infos.user.lang_n != 0:
-            triggers = "triggers_eng.json"
             dialogs = "dialogs_eng.json"
         else:
-            triggers = "triggers.json"
             dialogs = "dialogs.json"
-
-        lang_itm = "IT" if infos.user.lang_n == 0 else "EN"
 
         if infos.text == "":
             return say("Devi dirmi la data di nasciata nel formato DD/MM/YYYY")
@@ -562,7 +542,7 @@ def set_nascita(infos):
 
         try:
             d, m, y = data_nascita.split("/")
-            check = datetime.date(int(y), int(m), int(d))
+            datetime.date(int(y), int(m), int(d))
         except Exception as err:
             return say("A quanto pare %s non e' una data reale (%s)" % (infos.text, err))
 
@@ -580,17 +560,10 @@ def set_nascita(infos):
 def set_symbol(infos):
     say = infos.reply
     try:
-        user = infos.user.username
-        uid = infos.user.uid
-
         if infos.user.lang_n != 0:
             triggers = "triggers_eng.json"
-            dialogs = "dialogs_eng.json"
         else:
             triggers = "triggers.json"
-            dialogs = "dialogs.json"
-
-        lang_itm = "IT" if infos.user.lang_n == 0 else "EN"
 
         if infos.text == "":
             return say("Devi dirmi il simbolo con cui riconoscero' i comandi!")
@@ -612,17 +585,10 @@ def set_symbol(infos):
 def set_antispam_time(infos):
     say = infos.reply
     try:
-        user = infos.user.username
-        uid = infos.user.uid
-
         if infos.user.lang_n != 0:
             triggers = "triggers_eng.json"
-            dialogs = "dialogs_eng.json"
         else:
             triggers = "triggers.json"
-            dialogs = "dialogs.json"
-
-        lang_itm = "IT" if infos.user.lang_n == 0 else "EN"
 
         if infos.text == "":
             return say("Devi dirmi un numero che indica il tempo di antispam!")
@@ -658,8 +624,6 @@ def del_risp(infos):
             dialogs = "dialogs_eng.json"
         else:
             dialogs = "dialogs.json"
-
-        lang_itm = "IT" if infos.user.lang_n == 0 else "EN"
 
         if infos.text == "":
             return say("Devi specificare la sezione da cui eliminare e il numero della frase da eliminare:\n"
@@ -751,7 +715,7 @@ def backup(infos):
             triggers = "triggers.json"
 
         name = "Files/bot_files/%s/backup - %s.kb" % (infos.bid, time.strftime("%A - %H:%M:%S"))
-        d = json.loads(open("Files/bot_files/%s/%s" % (infos.bid, dialogs )).read())
+        d = json.loads(open("Files/bot_files/%s/%s" % (infos.bid, dialogs)).read())
         t = json.loads(open("Files/bot_files/%s/%s" % (infos.bid, triggers)).read())
         f = json.dumps({"dialogs": d, "triggers": t})
         with open(name, "w") as fl:
@@ -803,14 +767,7 @@ def del_trigger_vuoti(infos):
             triggers = "triggers.json"
             dialogs = "dialogs.json"
 
-        lang_itm = "IT" if infos.user.lang_n == 0 else "EN"
-
-        user = infos.user.username
-        uid = infos.user.uid
-
         dials = json.loads(open("Files/bot_files/%s/%s" % (infos.bid, dialogs)).read())
-
-        diter = dials.keys()
         trigs = json.loads(open("Files/bot_files/%s/%s" % (infos.bid, triggers)).read())
 
         sections = ["contents", "interactions", "equals", "eteractions", "admin_actions", "bot_commands"]

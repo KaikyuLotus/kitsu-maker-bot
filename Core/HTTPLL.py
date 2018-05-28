@@ -1,5 +1,7 @@
 # coding=utf-8
 
+# Copyright (c) 2017 Kaikyu
+
 import io
 import json
 import shutil

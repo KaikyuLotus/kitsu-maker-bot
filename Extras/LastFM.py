@@ -1,7 +1,5 @@
 import requests
-from LowLevel import DBs
-
-lastfm_token = "ccb28618868b79c238a20e96c9d5a6d2"
+from Core.Settings import *
 
 
 class BaseError(Exception):

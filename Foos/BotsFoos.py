@@ -2,15 +2,6 @@
 
 # Copyright (c) 2017 Kaikyu
 
-# 888    d8P  d8b 888                                                .d8888b.                888
-# 888   d8P   Y8P 888                                               d88P  Y88b               888
-# 888  d8P        888                                               888    888               888
-# 888d88K     888 888888 .d8888b  888  888 88888b.   .d88b.         888         .d88b.   .d88888  .d88b.
-# 8888888b    888 888    88K      888  888 888 "88b d8P  Y8b        888        d88""88b d88" 888 d8P  Y8b
-# 888  Y88b   888 888    "Y8888b. 888  888 888  888 88888888  8888  888    888 888  888 888  888 88888888
-# 888   Y88b  888 Y88b.       X88 Y88  888 888  888 Y8b.            Y88b  d88P Y88..88P Y88b 888 Y8b.
-# 888    Y88b 888  "Y888  88888P'  "Y88888 888  888  "Y8888          "Y8888P"   "Y88P"   "Y88888  "Y8888
-
 import json
 import operator
 import random
@@ -30,8 +21,8 @@ from Core.Infos import Infos
 from Core.Dialoger import send
 from Cache import BotCache
 from LowLevel import LowLevel, DBs
+from Core.Settings import *
 
-kaID = 487353090
 chars = "abcdefghijklmnopqrstuwxyz"
 
 
@@ -45,7 +36,7 @@ def generate(infos):
     for i in range(14):
         base = random.randint(1, 3)
         if base == 3:
-            paswd += chars[random.randint(0, len(chars)-1)]
+            paswd += chars[random.randint(0, len(chars) - 1)]
         elif base == 2:
             paswd += chars[random.randint(0, len(chars) - 1)].upper()
         else:
@@ -139,7 +130,7 @@ def startb(infos):
 
         Dialoger.send(infos, None, special_text=txt, to_id=infos.prop_id)
 
-    text =  "\n\n_______________________"
+    text = "\n\n_______________________"
     text += "\n<b>Bot creato con</b> <link>t.me/ChatbotMakerBot:>Syntaxer</link>!"
     text += "\n<link>t.me/Kaikyu:>Kaikyu Lotus Channel</link>"
 
@@ -189,7 +180,8 @@ def get_gen_answ(infos):
     if not os.path.isfile("Files/bot_files/%s/gen_answ.txt" % infos.bid):
         return infos.reply("File ancora non creato, master.")
 
-    HTTPLL.sendFileDocument(infos.token, infos.cid, "Files/bot_files/%s/gen_answ.txt" % infos.bid, caption="Ecco master.")
+    HTTPLL.sendFileDocument(infos.token, infos.cid, "Files/bot_files/%s/gen_answ.txt" % infos.bid,
+                            caption="Ecco master.")
     with open("Files/bot_files/%s/gen_answ.txt" % infos.bid, "w") as fl:
         fl.write((">> Log iniziato il %s\n\n" % time.strftime("%A - %H:%M:%S")))
     return
@@ -258,8 +250,8 @@ def triggers(infos):
         msg += "\nContenuti    [1]\n"
 
         tot = len(dic["contents"]) + len(dic["interactions"]) \
-              + len(dic["equals"]) + len(dic["admin_actions"]) \
-              + len(dic["eteractions"]) + len(dic["bot_commands"])
+            + len(dic["equals"]) + len(dic["admin_actions"]) \
+            + len(dic["eteractions"]) + len(dic["bot_commands"])
 
         if len(dic["contents"]) != 0:
             for trig in dic["contents"]:
@@ -427,10 +419,9 @@ def extractor(infos):
         return
 
     uid = infos.user.uid
-    if infos.user.uid != 343527938:
-        if infos.cid != kaID:
-            if Manager.get_prop_id(infos.token) != uid:
-                return
+    if infos.user.uid != master_id:
+        if Manager.get_prop_id(infos.token) != uid:
+            return
 
     stkid = infos.user.message.item_id
     thing = infos.user.message.what

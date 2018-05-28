@@ -2,15 +2,6 @@
 
 # Copyright (c) 2017 Kaikyu
 
-# 888    d8P  d8b 888                                                .d8888b.                888
-# 888   d8P   Y8P 888                                               d88P  Y88b               888
-# 888  d8P        888                                               888    888               888
-# 888d88K     888 888888 .d8888b  888  888 88888b.   .d88b.         888         .d88b.   .d88888  .d88b.
-# 8888888b    888 888    88K      888  888 888 "88b d8P  Y8b        888        d88""88b d88" 888 d8P  Y8b
-# 888  Y88b   888 888    "Y8888b. 888  888 888  888 88888888  8888  888    888 888  888 888  888 88888888
-# 888   Y88b  888 Y88b.       X88 Y88  888 888  888 Y8b.            Y88b  d88P Y88..88P Y88b 888 Y8b.
-# 888    Y88b 888  "Y888  88888P'  "Y88888 888  888  "Y8888          "Y8888P"   "Y88P"   "Y88888  "Y8888
-
 import os
 
 from Foos import BotsFoos, Commands
@@ -22,26 +13,24 @@ from Utils import Logger as Log
 
 master_commands = {
                    "send_message": Foos.send_message,
-                   "reset_classifica": Foos.reset_classifica,
                    "detach_bot": Foos.detach_bot,
                    "attach_bot": Foos.attach_bot,
-                   "classifica": Foos.classificav2,
                    "status": Foos.stats,
                    "check_unactive": Foos.get_empty_bot,
                    "mcast": Foos.mcast,
                    "proprietario": BotsFoos.proprietary,
-                   "reboot": Foos.spegni,
                    "auth": Foos.add_auth,
-                   "notice": Foos.notice
+                   "notice": Foos.notice,
+                   "restart": Foos.restart
                    }
 
 kitsu_commands = {
                    "start": Foos.start,
-                   "restart": Foos.restart,
                    "newbot": Foos.newbot,
                    "botlist": Foos.bot_list,
                    "change_token": Commands.change_token,
-                   "help": Foos.help
+                   "help": Foos.help,
+                   "myid": Foos.myid
                   }
 
 bot_master_comm = {

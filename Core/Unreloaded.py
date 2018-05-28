@@ -1,5 +1,7 @@
 # coding=utf-8
 
+# Copyright (c) 2017 Kaikyu
+
 import json
 import os
 import threading
@@ -9,6 +11,7 @@ from Utils import Logger as Log, Utils
 import psutil
 
 from Core import HTTPLL
+from Core.Settings import *
 
 
 # Thanks to Python Telegram Bot for this MWT
@@ -51,8 +54,6 @@ delete_codes = {}
 antisp = {}
 scores = {}
 gbots = {}
-
-kaID = 487353090
 
 p = psutil.Process(os.getpid())
 
@@ -162,6 +163,6 @@ def rankings():
             oldcl = cl
 
         except Exception as err:
-            HTTPLL.sendMessage(kt, chat_id=kaID, text=str(err))
+            HTTPLL.sendMessage(kt, chat_id=owner_id, text=str(err))
             Log.e(err)
             break

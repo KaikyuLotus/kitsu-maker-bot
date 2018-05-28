@@ -12,9 +12,6 @@ def get_text(infos, sezione):
     try:
         sezione = sezione.lower()
 
-        if infos.bid == 554500728 and infos.user.uid in [276804260] and sezione == "i'm back":
-            sezione += " moon"
-
         dialogs = LowLevel.jfile("d", infos.bid, infos.user.lang_n)
         if not dialogs:
             return Log.w("Mi è stato impossibile leggere i dialoghi di %s lang_n %s" % (infos.bid, infos.user.lang_n))
@@ -154,8 +151,8 @@ def base_send(infos, sezione, special_text=None, to_id=None):
 
         return None
 
-    except Error.Unauthorized as err:
+    except Error.Unauthorized:
         return "ERR"
 
-    except Exception as err:
+    except Exception:
         return "ERR"

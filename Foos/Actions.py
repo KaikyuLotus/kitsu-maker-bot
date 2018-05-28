@@ -108,7 +108,7 @@ def action(infos, text, sezione):
 
         if "[setdesc]" in text:
             if infos.user.is_admin:
-                HTTPLL.setChatDesc(infos)
+                HTTPLL.setChatDescription(infos)
                 acts.append("[setdesc]")
             else:
                 return Dialogs.base_send(infos, "ut_non_admin")

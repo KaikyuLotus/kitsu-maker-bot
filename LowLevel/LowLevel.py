@@ -76,16 +76,18 @@ def get_moment():
         return "Notte"
 
 
-def get_time(t0): return str(int((time.time() - t0) * 1000))
+def get_time(t0):
+    return str(int((time.time() - t0) * 1000))
 
 
-def read(name, bot_id): return json.loads(codecs.open("Files/bot_files/%s/%s" % (bot_id, name)).read(), encoding='utf8')
+def read(name, bot_id):
+    return json.loads(codecs.open("Files/bot_files/%s/%s" % (bot_id, name)).read(), encoding='utf8')
 
 
 def dial_read(lang):
     try:
         return json.loads(codecs.open("Files/jsons/%s.json" % lang, encoding='utf8').read())
-    except Exception as err:
+    except Exception:
         print("Linguaggio non trovato (%s) o file corrotto." % lang)
         return None
 
@@ -145,9 +147,12 @@ def jwrite(desc, bid, jsn, lang):
             print("Impossibile scrivere con bid nullo.")
             return False
         f = None
-        if desc == "d": f = "dialogs"
-        if desc == "t": f = "triggers"
-        if lang != 0: f += "_eng.json"
+        if desc == "d":
+            f = "dialogs"
+        if desc == "t":
+            f = "triggers"
+        if lang != 0:
+            f += "_eng.json"
         else:
             f += ".json"
 
@@ -184,7 +189,7 @@ def add_risposta(bid, risp, sec, lang):
         dials = jfile("d", bid, lang)
         dials[sec].append(risp)
         return True if jwrite("d", bid, dials, lang) else False
-    except Exception as err:
+    except Exception:
         return False
 
 

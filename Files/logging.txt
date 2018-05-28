@@ -1,0 +1,23 @@
+[ Info   ] 17:59:03 - [from: run           ] - Starting Kitsu, version 3.0.
+[ Warn   ] 17:59:03 - [from: attach_bot    ] - Empty token.
+[ Debug  ] 17:59:03 - [from: run           ] - Booted in 23 ms...
+[ Info   ] 17:59:42 - [from: run           ] - Starting Kitsu, version 3.0.
+[ Debug  ] 17:59:42 - [from: add_bot       ] - Nuovo bot (569510835) aggiunto al file bots
+[ Debug  ] 17:59:42 - [from: attach_bot    ] - Passed a list, iterating...
+[ Debug  ] 17:59:42 - [from: attach_bot    ] - Finished iterating tokens!
+[ Debug  ] 17:59:42 - [from: run           ] - Booted in 77 ms...
+[ Debug  ] 17:59:43 - [from: getter        ] - Starting bot 569510835:AAGfajJMZ52Q9oVSxOqc3CtpjpRoYV43bgo
+[ Debug  ] 17:59:43 - [from: getter        ] - Starting bot 569510835:AAGfajJMZ52Q9oVSxOqc3CtpjpRoYV43bgo
+[ Info   ] 17:59:56 - [from: run           ] - Starting Kitsu, version 3.0.
+[ Debug  ] 17:59:56 - [from: attach_bot    ] - Passed a list, iterating...
+[ Debug  ] 17:59:56 - [from: attach_bot    ] - Finished iterating tokens!
+[ Debug  ] 17:59:56 - [from: run           ] - Booted in 26 ms...
+[ Debug  ] 17:59:56 - [from: getter        ] - Starting bot 569510835:AAGfajJMZ52Q9oVSxOqc3CtpjpRoYV43bgo
+[ Info   ] 18:01:11 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Debug  ] 18:01:11 - [from: attach_bot    ] - Passed a list, iterating...
+[ Debug  ] 18:01:11 - [from: attach_bot    ] - Finished iterating tokens!
+[ Debug  ] 18:01:12 - [from: getter        ] - Starting bot 569510835:AAGfajJMZ52Q9oVSxOqc3CtpjpRoYV43bgo
+[ Info   ] 18:04:55 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Debug  ] 18:04:55 - [from: attach_bot    ] - Passed a list, iterating...
+[ Debug  ] 18:04:55 - [from: attach_bot    ] - Finished iterating tokens!
+[ Debug  ] 18:04:56 - [from: getter        ] - Starting bot 569510835:AAGfajJMZ52Q9oVSxOqc3CtpjpRoYV43bgo

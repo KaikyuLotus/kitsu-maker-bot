@@ -11,25 +11,21 @@
 # 888   Y88b  888 Y88b.       X88 Y88  888 888  888 Y8b.            Y88b  d88P Y88..88P Y88b 888 Y8b.
 # 888    Y88b 888  "Y888  88888P'  "Y88888 888  888  "Y8888          "Y8888P"   "Y88P"   "Y88888  "Y8888
 
-import time
 
 from Core import Manager
 from Utils import Logger as Log
 from Core import ThreadedCore as Core
 from Core import HTTPLL
-from LowLevel.LowLevel import get_time
+from Core.Settings import *
 
 
 def run():
-    Log.i("Starting Kitsu, version 3.0.")
-    token = "TOKEN"
-    your_id = 123  # Your Telegram user ID
-    ts = time.time()
     Core.attach_bot(Manager.get_token_list(), clean=True)
-    Log.d("Booted in %s ms..." % get_time(ts))
-    HTTPLL.sendMessage(token, your_id, "Booted in %s ms..." % get_time(ts))
+    Core.set_main_bot(main_bot_token, owner_id)
+    HTTPLL.sendMessage(main_bot_token, owner_id, "Booted.")
     Core.idle()
 
 
 if __name__ == "__main__":
+    Log.i("Starting Kitsu, version 3.0.")
     run()

@@ -1,3 +1,7 @@
+# coding=utf-8
+
+# Copyright (c) 2017 Kaikyu
+
 import ssl
 import sys
 import json
@@ -9,6 +13,7 @@ from http.server import HTTPServer
 
 from Core import Elaborator, Manager, Infos, HTTPLL
 from Core.Error import ServerError, Unauthorized
+from Core.Settings import *
 
 from Utils import Logger as Log, Utils
 from LowLevel import LowLevel
@@ -16,12 +21,12 @@ from Foos import BotsFoos, Foos
 
 from Cache import BotCache
 
-
-base_url = "http://api.telegram.org/"
+# Edit these pats as you prefer
 ckey = "Files/Auth/private.key"
 certfile = "Files/Auth/cert.pem"
 port = 8443
-kitsu_id = 569510835
+
+base_url = "http://api.telegram.org/"
 
 offsets = {}
 token_black_list = []
@@ -99,7 +104,7 @@ def update_handler(bot, update):
             try:
                 if "new_chat_members" in update["message"]:
                     if update["message"]["new_chat_members"] or "left_chat_member" in update["message"]:
-                        if bot["id"] == kitsu_id:
+                        if bot["id"] == main_bot_id:
                             return Foos.status(bot, update)
                         return BotsFoos.status(bot, update)
             except Exception as err:
@@ -209,3 +214,8 @@ def detach_bot(token, bid=None):
 
     Log.i("Bot with %s token stopped." % token)
     return True
+
+
+def set_main_bot(token, owner__id):
+    if Manager.add_bot(owner__id, int(token.split(":")[0]), token):
+        attach_bot(token)

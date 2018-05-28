@@ -2,14 +2,6 @@
 
 # Copyright (c) 2017 Kaikyu
 
-# 888    d8P  d8b 888                                                .d8888b.                888
-# 888   d8P   Y8P 888                                               d88P  Y88b               888
-# 888  d8P        888                                               888    888               888
-# 888d88K     888 888888 .d8888b  888  888 88888b.   .d88b.         888         .d88b.   .d88888  .d88b.
-# 8888888b    888 888    88K      888  888 888 "88b d8P  Y8b        888        d88""88b d88" 888 d8P  Y8b
-# 888  Y88b   888 888    "Y8888b. 888  888 888  888 88888888  8888  888    888 888  888 888  888 88888888
-# 888   Y88b  888 Y88b.       X88 Y88  888 888  888 Y8b.            Y88b  d88P Y88..88P Y88b 888 Y8b.
-# 888    Y88b 888  "Y888  88888P'  "Y88888 888  888  "Y8888          "Y8888P"   "Y88P"   "Y88888  "Y8888
 import json
 import os
 import pprint
@@ -20,39 +12,29 @@ import schedule
 
 from Cache import BotCache
 from LowLevel import DBs, LowLevel
-from Utils import Logger as Log, Utils
+from Utils import Logger as Log
 from Core import HTTPLL, Manager, Dialoger
 from Core import ThreadedCore as Core
+from Core.Settings import *
 
 ver = "0.8"
-kaID = 487353090
-groupID = -1001141699210
-chan_id = -1001141066491
 max_bots = 1000
-kitsu_token = "569510835:AAFqUXOd0wNoFkL4-InHDznJyL111yJXOtI"
-
-# Kaikyu, Veiler, Kurama, Yuki, Brain not found, YTGames
-# auth = [487353090, 134585585, 156343027, 197896791, 224252010, 165594005]
 
 f = open("Files/jsons/auths.json", "r")
 auth = json.loads(f.read())
 f.close()
 
+# Here you can set how many bots an user can have
 limits = {
-    487353090: 10,  # Kaikyu
-    134585585: 1,   # Veiler
-    156343027: 1,   # Kurama
-    197896791: 1,   # Yuki
-    165594005: 1    # YTGames
+    123: 2,  # ID, count
 }
 
 
-def escape_markdown(text): return re.sub(r'([%s])' % '\*_`\[', r'\\\1', text)
+def escape_markdown(text):
+    return re.sub(r'([%s])' % '\*_`\[', r'\\\1', text)
 
 
 def restart(infos):
-    if not infos.user.is_master:
-        return
     infos.reply("Restarting...")
     os.execv(sys.executable, ['python35'] + sys.argv)
 
@@ -62,7 +44,11 @@ def send_message(infos):
         args = infos.text.split(" ")
         HTTPLL.sendMessage(infos.token, args[0], infos.text.replace(args[0], ""))
     except Exception as err:
-        HTTPLL.sendMessage(infos.token, kaID, str(err))
+        HTTPLL.sendMessage(infos.token, owner_id, str(err))
+
+
+def myid(infos):
+    HTTPLL.sendMessage(infos.token, owner_id, "ID: %s" % infos.user.uid)
 
 
 def help(infos):
@@ -71,9 +57,9 @@ def help(infos):
             return
 
         string = "%s [@%s] (%s) ha detto:\n%s" % (infos.user.name, infos.user.username, infos.user.uid, infos.text)
-        HTTPLL.sendMessage(infos.token, kaID, string)
+        HTTPLL.sendMessage(infos.token, owner_id, string)
     except Exception as err:
-        HTTPLL.sendMessage(infos.token, kaID, str(err))
+        HTTPLL.sendMessage(infos.token, owner_id, str(err))
 
 
 def notice(infos):
@@ -82,7 +68,7 @@ def notice(infos):
 
     infos.text = infos.text.replace("[_]", "\n")
 
-    HTTPLL.sendMessage(infos.token, kaID, infos.text)
+    HTTPLL.sendMessage(infos.token, owner_id, infos.text)
 
     bids = Manager.get_bots_id()
     for bid in bids:
@@ -90,10 +76,10 @@ def notice(infos):
         uid = Manager.get_prop_id(token)
         try:
             HTTPLL.sendMessage(infos.token, uid, infos.text)
-        except Exception as err:
+        except Exception:
             Log.w("%s notice unauth" % uid)
 
-    HTTPLL.sendMessage(infos.token, kaID, "Avviso importante inviato.")
+    HTTPLL.sendMessage(infos.token, owner_id, "Avviso importante inviato.")
 
 
 def add_auth(infos):
@@ -133,7 +119,7 @@ def start(infos):
     global max_bots
     if DBs.add_user(infos):
         txt = "Avviato da %s per la prima volta." % infos.user.username
-        Dialoger.send(infos, "", special_text=txt, to_id=kaID)
+        Dialoger.send(infos, "", special_text=txt, to_id=owner_id)
 
     text = "Benvenuto *%s*, se vuoi utilizzarmi esegui il comando /newbot" % infos.user.name
 
@@ -158,7 +144,7 @@ def newbot(infos):
 
     if infos.text == "token":
         say("Non devi scrivere \"token\", devi darmi la **token** del tuo **bot**.", markdown=True)
-        HTTPLL.sendMessage(infos.token, kaID, "@%s ha usato /newbot \"token\" lol" % infos.user.username)
+        HTTPLL.sendMessage(infos.token, owner_id, "@%s ha usato /newbot \"token\" lol" % infos.user.username)
         return
 
     if Manager.get_bot_count() >= max_bots and "!!" not in infos.text:
@@ -203,13 +189,13 @@ def newbot(infos):
 
     msg += "Nome %s\nUsername @%s\nID: %s" % (tbot["first_name"], tbot["username"], tbot["id"])
 
-    HTTPLL.sendMessage(infos.token, kaID, msg)
+    HTTPLL.sendMessage(infos.token, owner_id, msg)
     Core.attach_bot(key)
 
 
 def stats(infos):
     t = time.time()
-    if infos.user.uid != kaID:
+    if infos.user.uid != owner_id:
         return
     text = "In questo momento sto mantenendo online %s bot.\n" % Core.count_bots()
     text += "Il tempo di elaborazione di questo messaggio è di %s ms, " % LowLevel.get_time(t)
@@ -220,11 +206,13 @@ def stats(infos):
 
 def report(infos):
     try:
-        if not infos.user.is_master: return
-        if infos.text == "": return
+        if not infos.user.is_master:
+            return
+        if infos.text == "":
+            return
 
         Dialoger.send(infos, None, to_id=infos.prop_id, special_text="Questo bot è stato reportato da Kaikyu per:\n%s" % infos.text)
-        Dialoger.send(infos, None, to_id=kaID, special_text="Report inviato, master.", special_token=kitsu_token)
+        Dialoger.send(infos, None, to_id=owner_id, special_text="Report inviato, master.", special_token=main_bot_token)
     except Exception as err:
         print(err)
 
@@ -248,36 +236,21 @@ def status(bot, update):
                 text = "Aggiunta a: %s\nUtente: @%s" % (g_name, by)
                 bpht = None  # ToDo Get Propic Method
                 if bpht:
-                    HTTPLL.sendPhoto(kitsu_token, kaID, bpht, caption=text)
+                    HTTPLL.sendPhoto(main_bot_token, owner_id, bpht, caption=text)
                 else:
-                    HTTPLL.sendMessage(kitsu_token, kaID, text)
-
-            elif gid == groupID:
-                if Manager.has_a_bot(join_user_id):
-                    HTTPLL.sendMessage(kitsu_token, gid, "%s ha un mio bot, benvenuto! ~" % join_user_name)
-                else:
-                    if join_user_username.lower().endswith("bot"):
-                        if Manager.is_kitsu_bot(join_user_id):
-                            return HTTPLL.sendMessage(kitsu_token, gid, "%s è mio bot, kitsu! ~" % join_user_name)
-                        HTTPLL.sendMessage(kitsu_token, gid, "%s non è un mio bot, kitsu." % join_user_name)
-                    else:
-                        HTTPLL.sendMessage(kitsu_token, gid, "%s non ha un mio bot, kitsu." % join_user_name)
-                    HTTPLL.kickChatMember(kitsu_token, gid, join_user_id)
+                    HTTPLL.sendMessage(main_bot_token, owner_id, text)
 
         elif update["message"]["left_chat_member"]:
             left_user_name = update["message"]["left_chat_member"]['first_name']
             left_user_id = update["message"]["left_chat_member"]['id']
 
             if left_user_id == bot["id"]:
-                HTTPLL.sendMessage(kitsu_token, kaID, text="Rimossa da: %s\nUtente @%s" % (g_name, by))
+                HTTPLL.sendMessage(main_bot_token, owner_id, text="Rimossa da: %s\nUtente @%s" % (g_name, by))
                 Log.a("[%s] Rimossa da un gruppo da %s" % (bot["first_name"], by))
 
     except Exception as err:
         Log.e(err)
         pprint.pprint(update)
-
-
-def classificav2(infos): infos.reply(Utils.class_text(), markdown=True)
 
 
 def get_empty_bot(infos):
@@ -302,7 +275,7 @@ def get_empty_bot(infos):
             elif tot < 20:
                 try:
                     HTTPLL.sendMessage(toke, Manager.get_prop_id(toke), "Master, t-ti sei dimenticato di me...?")
-                except Exception as err:
+                except Exception:
                     wb += 1
                     Manager.delete_bot(bid)
                 w += 1
@@ -360,18 +333,3 @@ def detach_bot(infos):
     if res:
         msg = "Bot stoppato con successo, kitsu."
     infos.reply(msg)
-
-
-def reset_classifica(infos):
-    bids = Manager.get_bots_id()
-
-    for bid in bids:
-        with open("Files/bot_files/%s/trig_usage.json" % bid, "w") as fl:
-            fl.write("{}")
-    infos.reply("Fatto!")
-    return
-
-
-def spegni(infos):
-    HTTPLL.sendMessage(infos.token, infos.cid, "Rebooting...")
-    os.system("pkill -9 python3.6")

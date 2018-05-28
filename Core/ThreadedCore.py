@@ -1,3 +1,7 @@
+# coding=utf-8
+
+# Copyright (c) 2017 Kaikyu
+
 import sys
 import json
 import threading
@@ -6,14 +10,13 @@ import time
 
 from Core import Elaborator, Manager, Infos, HTTPLL
 from Core.Error import Unauthorized
+from Core.Settings import *
 
 from Utils import Logger as Log, Utils
 from LowLevel import LowLevel
 from Foos import BotsFoos, Foos
 
 from Cache import BotCache
-
-kitsu_id = 569510835
 
 offsets = {}
 token_black_list = []
@@ -23,12 +26,14 @@ def getter(token):
     if token not in offsets:
         offsets[token] = 0
 
+    Log.d("Starting bot %s" % token)
+
     while token in BotCache.bots:
         for update in HTTPLL.getUpdates(token, offsets[token], timeout=120):
             offsets[token] = update["update_id"] + 1
             update_handler(BotCache.bots[token], update)
 
-    HTTPLL.sendMessage(token, 487353090, "Bot {} stopped.".format(token))
+    HTTPLL.sendMessage(token, owner_id, "Bot {} stopped.".format(token))
 
 
 def update_handler(bot, update):
@@ -49,7 +54,7 @@ def update_handler(bot, update):
             try:
                 if "new_chat_members" in update["message"]:
                     if update["message"]["new_chat_members"] or "left_chat_member" in update["message"]:
-                        if bot["id"] == kitsu_id:
+                        if bot["id"] == main_bot_id:
                             return Foos.status(bot, update)
                         return BotsFoos.status(bot, update)
             except Exception as err:
@@ -148,3 +153,8 @@ def detach_bot(token, bid=None):
 def idle():
     while True:
         time.sleep(10)
+
+
+def set_main_bot(token, owner__id):
+    if Manager.add_bot(owner__id, int(token.split(":")[0]), token):
+        attach_bot(token)
