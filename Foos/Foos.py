@@ -48,7 +48,7 @@ def send_message(infos):
 
 
 def myid(infos):
-    HTTPLL.sendMessage(infos.token, owner_id, "ID: %s" % infos.user.uid)
+    HTTPLL.sendMessage(infos.token, infos.cid, "ID: %s" % infos.user.uid)
 
 
 def help(infos):
