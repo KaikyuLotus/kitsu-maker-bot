@@ -24,6 +24,7 @@ There's a really nice guide on how to use Kitsubots: [here](http://telegra.ph/Co
 * requests
 * psutil
 * schedule
+
 python3 -m pip install requests psutil schedule
 
 This is one of my first projects, the code is not really consistent and there are lots of bugs...
