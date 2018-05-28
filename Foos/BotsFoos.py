@@ -419,7 +419,7 @@ def extractor(infos):
         return
 
     uid = infos.user.uid
-    if infos.user.uid != master_id:
+    if infos.user.uid != owner_id:
         if Manager.get_prop_id(infos.token) != uid:
             return
 

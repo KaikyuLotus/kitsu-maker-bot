@@ -27,12 +27,10 @@ from Core import HTTPLL, Manager, Unreloaded
 from Utils import Logger as Log
 from Extras.LastFM import LastFM, UnvalidUsername, UnregistredUser, EmptyTracks
 from Foos import Dialogs
-
+from Core.Settings import *
 
 bots_cache = {}
 
-kaID = 487353090
-kitsu_token = "569510835:AAHskMqSa02KAditTfztt3KuHtE9oFQRYGs"
 zwnj = "‌"
 
 
@@ -91,7 +89,7 @@ def rnd_elab(infos, text):
                 text = text.replace("rnd[%s, %s]" % (minn, maxx), str(num), 1)
             x += 1
         return text
-    except Exception as err:
+    except Exception:
         warn = get_phrase("rnd[ err")
         HTTPLL.sendMessage(infos.token, chat_id=Manager.get_prop_id(infos.token), text=warn)
         Log.d("[Bot: @%s | %s] rnd error" % (infos.bid, infos.username))
@@ -544,7 +542,7 @@ def warn_token(key):
     bid = ids["bot_id"]
 
     try:
-        HTTPLL.sendMessage(kitsu_token, pid, "Il tuo bot è stato scollegato per token revokata o invalida,"
+        HTTPLL.sendMessage(main_bot_token, pid, "Il tuo bot è stato scollegato per token revokata o invalida,"
                                              " registra la sua nuova token per tornare ad utilizzarlo!")
     except Exception:
         pass
