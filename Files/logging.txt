@@ -21,3 +21,46 @@
 [ Debug  ] 18:04:55 - [from: attach_bot    ] - Passed a list, iterating...
 [ Debug  ] 18:04:55 - [from: attach_bot    ] - Finished iterating tokens!
 [ Debug  ] 18:04:56 - [from: getter        ] - Starting bot 569510835:AAGfajJMZ52Q9oVSxOqc3CtpjpRoYV43bgo
+[ Info   ] 20:59:10 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Warn   ] 20:59:10 - [from: attach_bot    ] - Empty token.
+[ Info   ] 21:01:22 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Warn   ] 21:01:22 - [from: attach_bot    ] - Empty token.
+[ Info   ] 21:06:28 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Warn   ] 21:06:28 - [from: attach_bot    ] - Empty token.
+[ Info   ] 21:12:20 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Warn   ] 21:12:20 - [from: attach_bot    ] - Empty token.
+[ Info   ] 21:12:38 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Warn   ] 21:12:38 - [from: attach_bot    ] - Empty token.
+[ Info   ] 21:13:28 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Warn   ] 21:13:28 - [from: attach_bot    ] - Empty token.
+[ Debug  ] 21:13:28 - [from: add_bot       ] - Nuovo bot (495913948) aggiunto al file bots
+[ Info   ] 21:15:56 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Warn   ] 21:15:56 - [from: attach_bot    ] - Empty token.
+[ Debug  ] 21:15:56 - [from: add_bot       ] - Nuovo bot (495913948) aggiunto al file bots
+[ Debug  ] 21:15:56 - [from: get_main_bot_token] - First boot needed to configure, please restart the script.
+[ Info   ] 21:16:11 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Warn   ] 21:16:11 - [from: attach_bot    ] - Empty token.
+[ Debug  ] 21:16:11 - [from: add_bot       ] - Nuovo bot (495913948) aggiunto al file bots
+[ Debug  ] 21:16:11 - [from: get_main_bot_token] - First boot needed to configure, please restart the script.
+[ Info   ] 21:16:14 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Debug  ] 21:16:14 - [from: attach_bot    ] - Passed a list, iterating...
+[ Debug  ] 21:16:14 - [from: attach_bot    ] - Finished iterating tokens!
+[ Debug  ] 21:16:15 - [from: getter        ] - Starting bot 495913948:AAEbXsYCZVqm1TsDHei1jHg8bYEzb8KtbkM
+[ Info   ] 21:18:19 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Debug  ] 21:18:19 - [from: attach_bot    ] - Passed a list, iterating...
+[ Debug  ] 21:18:19 - [from: attach_bot    ] - Finished iterating tokens!
+[ Debug  ] 21:18:20 - [from: getter        ] - Starting bot 495913948:AAEbXsYCZVqm1TsDHei1jHg8bYEzb8KtbkM
+[ Info   ] 21:19:19 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Debug  ] 21:19:19 - [from: attach_bot    ] - Passed a list, iterating...
+[ Debug  ] 21:19:19 - [from: attach_bot    ] - Finished iterating tokens!
+[ Debug  ] 21:19:20 - [from: getter        ] - Starting bot 495913948:AAEbXsYCZVqm1TsDHei1jHg8bYEzb8KtbkM
+[ Info   ] 21:19:50 - [from: <module>      ] - Starting Kitsu, version 3.0.
+[ Debug  ] 21:19:50 - [from: attach_bot    ] - Passed a list, iterating...
+[ Debug  ] 21:19:50 - [from: attach_bot    ] - Finished iterating tokens!
+[ Debug  ] 21:19:51 - [from: getter        ] - Starting bot 495913948:AAEbXsYCZVqm1TsDHei1jHg8bYEzb8KtbkM
+[ Debug  ] 21:19:52 - [from: command_reader] - I'm Kitsu.
+[ Debug  ] 21:19:52 - [from: command_reader] - You're master.
+[ Debug  ] 21:48:28 - [from: command_reader] - I'm Kitsu.
+[ Debug  ] 21:48:28 - [from: command_reader] - You're master.
+[ Debug  ] 22:20:21 - [from: command_reader] - I'm Kitsu.
+[ Debug  ] 22:20:21 - [from: command_reader] - You're master.

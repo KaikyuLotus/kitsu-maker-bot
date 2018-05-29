@@ -1,5 +1,5 @@
 import requests
-from Core.Settings import *
+from Core import Manager
 
 
 class BaseError(Exception):
@@ -46,7 +46,7 @@ class EmptyTracks(BaseError):
 
 class LastFM:
     def __init__(self, user_id):
-        self._key = "&api_key=" + lastfm_token
+        self._key = "&api_key=" + Manager.get_lastfm_token()
         self._url = "http://ws.audioscrobbler.com/2.0/?"
         self._final = "&format=json&limit=1"
         self._method = "method=user.getrecenttracks"

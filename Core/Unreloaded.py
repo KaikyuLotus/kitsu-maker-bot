@@ -11,7 +11,6 @@ from Utils import Logger as Log, Utils
 import psutil
 
 from Core import HTTPLL
-from Core.Settings import *
 
 
 # Thanks to Python Telegram Bot for this MWT
@@ -97,16 +96,20 @@ def antispam(infos):
 
 
 @MWT(timeout=240)
-def get_admin_ids(chat_id, token): return [admin for admin in HTTPLL.getChatAdministrators(token, chat_id)]
+def get_admin_ids(chat_id, token):
+    return [admin for admin in HTTPLL.getChatAdministrators(token, chat_id)]
 
 
-def get_cpu(): return p.cpu_percent()
+def get_cpu():
+    return p.cpu_percent()
 
 
-def get_memory(): return int(p.memory_info()[0] / float(2 ** 20))
+def get_memory():
+    return int(p.memory_info()[0] / float(2 ** 20))
 
 
-def get_time(): return p.create_time()
+def get_time():
+    return p.create_time()
 
 
 def get_system_memory():
@@ -124,45 +127,3 @@ def get_delete_code(uid):
         return delete_codes[str(uid)]
     else:
         return ""
-
-
-def reset_scores():
-    global scores
-    while True:
-        time.sleep(300)
-        scores = {}
-
-
-def rankings():
-    Log.d("Rankings foo started.")
-    time.sleep(5)
-    kt = "569510835:AAHskMqSa02KAditTfztt3KuHtE9oFQRYGs"
-    rc = -1001110825751
-    try:
-        oldid = open("Files/jsons/ranking_msg_id").read()
-    except Exception:
-        oldid = None
-
-    oldcl = None
-    while True:
-        try:
-            cl = Utils.class_text() + "\n\nAlle %s" % time.strftime("%H:%M:%S")
-            if not cl:
-                time.sleep(1)
-                continue
-
-            if cl != oldcl:
-                if oldid:
-                    HTTPLL.editMessageText(kt, chat_id=rc, message_id=oldid, text=cl, parse_mode="markdown")
-                else:
-                    oldid = HTTPLL.sendMessage(kt, chat_id=rc, text=cl, parse_mode="markdown")["message_id"]
-                    with open("Files/jsons/ranking_msg_id", "w") as fl:
-                        fl.write(str(oldid))
-
-                time.sleep(0.5)
-            oldcl = cl
-
-        except Exception as err:
-            HTTPLL.sendMessage(kt, chat_id=owner_id, text=str(err))
-            Log.e(err)
-            break

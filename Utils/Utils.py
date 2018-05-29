@@ -27,7 +27,6 @@ from Core import HTTPLL, Manager, Unreloaded
 from Utils import Logger as Log
 from Extras.LastFM import LastFM, UnvalidUsername, UnregistredUser, EmptyTracks
 from Foos import Dialogs
-from Core.Settings import *
 
 bots_cache = {}
 
@@ -140,14 +139,15 @@ def replacer(infos, text):
 
                 Log.d("Quindi %s/%s/%s" % (d, m, y))
                 days = str(timedelta(days=(date.today() - date(y, m, d)).days)).split(" ")[0]
-                years = str(int(int(days)/365))
+                years = str(int(int(days) / 365))
                 age = str(int(int(days) / 30))
 
                 text = text.replace("+anni+", age)
                 text = text.replace("+giorni+", days)
                 text = text.replace("+anni_reali+", years)
             except Exception:
-                HTTPLL.sendMessage(infos.token, infos.prop_id, "master, reimposta la mia data di nascita con /set_nascita GG/MM/AAA...")
+                HTTPLL.sendMessage(infos.token, infos.prop_id,
+                                   "master, reimposta la mia data di nascita con /set_nascita GG/MM/AAA...")
                 Log.w("%s non è una data di nascita valida..." % date_strig)
                 return None
 
@@ -205,7 +205,7 @@ def replacer(infos, text):
                 state = "no"
             text = text.replace("+benvenuto+", state)
 
-        if "cpu%"in text:
+        if "cpu%" in text:
             text = text.replace("cpu", str(psutil.cpu_percent()))
         if "ram%" in text:
             text = text.replace("ram", str(psutil.virtual_memory()[2]))
@@ -241,14 +241,16 @@ def replacer(infos, text):
             text = text.replace("{??}", lett2)
             if "+nwarns+" in text:
                 try:
-                    warns = json.loads(open("Files/bot_files/%s/warns.json" % infos.bid).read())[str(infos.cid)][str(infos.to_user.uid)]
+                    warns = json.loads(open("Files/bot_files/%s/warns.json" % infos.bid).read())[str(infos.cid)][
+                        str(infos.to_user.uid)]
                 except Exception:
                     warns = 0
                 text = text.replace("+nwarns+", str(warns))
         else:
             if "+nwarns+" in text:
                 try:
-                    warns = json.loads(open("Files/bot_files/%s/warns.json" % infos.bid).read())[str(infos.cid)][str(infos.user.uid)]
+                    warns = json.loads(open("Files/bot_files/%s/warns.json" % infos.bid).read())[str(infos.cid)][
+                        str(infos.user.uid)]
                 except Exception:
                     warns = 0
                 text = text.replace("+nwarns+", str(warns))
@@ -519,7 +521,7 @@ def boundary(text):
     if not text[-1].isalpha() and not text[0].isdigit():
         b2 = r"\B"
 
-    return "%s%s%s" % (b1, tmp,  b2)
+    return "%s%s%s" % (b1, tmp, b2)
 
 
 def get_com_symbol(entity):
@@ -542,13 +544,14 @@ def warn_token(key):
     bid = ids["bot_id"]
 
     try:
-        HTTPLL.sendMessage(main_bot_token, pid, "Il tuo bot è stato scollegato per token revokata o invalida,"
-                                             " registra la sua nuova token per tornare ad utilizzarlo!")
+        HTTPLL.sendMessage(Manager.get_main_bot_token(), pid,
+                           "Il tuo bot è stato scollegato per token revokata o invalida,"
+                           " registra la sua nuova token per tornare ad utilizzarlo!")
     except Exception:
         pass
 
     if Manager.delete_bot(bid):
-            Log.a("Master, ho scollegato il bot di %s per token revocata." % pid)
+        Log.a("Master, ho scollegato il bot di %s per token revocata." % pid)
 
 
 def get_phrase(section): return LowLevel.dial_read("ita")[section]

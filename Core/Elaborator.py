@@ -327,14 +327,16 @@ def command_reader(infos):
         command = infos.user.message.command
 
         if infos.is_kitsu:
+            Log.d("I'm Kitsu.")
             for com in kitsu_commands:
                 if command == com:
                     return kitsu_commands[com](infos)
 
             if infos.user.is_master:
-                    for com in master_commands:
-                        if command == com:
-                            return master_commands[com](infos)
+                Log.d("You're master.")
+                for com in master_commands:
+                    if command == com:
+                        return master_commands[com](infos)
 
         if command == "start":
             return BotsFoos.startb(infos)
@@ -344,7 +346,7 @@ def command_reader(infos):
                 if command == com:
                     return bot_master_comm[com](infos)
 
-        infos.admins.append(kaID)
+        infos.admins.append(Manager.get_owner_id())
 
         if infos.user.uid in infos.admins:
             for com in bot_commands:

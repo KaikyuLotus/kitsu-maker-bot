@@ -10,7 +10,6 @@ import time
 
 from Core import Elaborator, Manager, Infos, HTTPLL
 from Core.Error import Unauthorized
-from Core.Settings import *
 
 from Utils import Logger as Log, Utils
 from LowLevel import LowLevel
@@ -26,54 +25,48 @@ def getter(token):
     if token not in offsets:
         offsets[token] = 0
 
-    Log.d("Starting bot %s" % token)
-
     while token in BotCache.bots:
         for update in HTTPLL.getUpdates(token, offsets[token], timeout=120):
             offsets[token] = update["update_id"] + 1
             update_handler(BotCache.bots[token], update)
 
-    HTTPLL.sendMessage(token, owner_id, "Bot {} stopped.".format(token))
+    HTTPLL.sendMessage(token, Manager.get_owner_id(), "Bot {} stopped.".format(token))
 
 
 def update_handler(bot, update):
-    infos = Infos.Infos(bot, update)
-    if infos.skip:
-        return
+    try:
+        infos = Infos.Infos(bot, update)
 
-    if infos.error:
-        Log.d("Errore owo!")
-        print(update)
-        return
+        if infos.error:
+            return Log.e("Errore nell'update: " + str(update))
 
-    if infos.user.uid in json.loads(open("Files/jsons/blacklist.json").read()):
-        return
+        if infos.user.uid in json.loads(open("Files/jsons/blacklist.json").read()) or infos.skip:
+            return
 
-    if not infos.error:
         if "message" in update:
-            try:
-                if "new_chat_members" in update["message"]:
-                    if update["message"]["new_chat_members"] or "left_chat_member" in update["message"]:
-                        if bot["id"] == main_bot_id:
-                            return Foos.status(bot, update)
-                        return BotsFoos.status(bot, update)
-            except Exception as err:
-                Log.e("Ho trovato un errore: riga %s %s %s" % (sys.exc_info()[-1].tb_lineno, type(err).__name__, err))
+            if "new_chat_members" in update["message"]:
+                if not update["message"]["new_chat_members"] or "left_chat_member" not in update["message"]:
+                    return
 
-        if infos.user.message.what == "command":
-            if infos.user.message.command == "report":
-                return Foos.report(infos)
-            try:
-                ok = Elaborator.command_reader(infos)
-                if ok == "procedi":
-                    if infos.user.message.pers_command:
-                        Elaborator.pers_commands(infos)
-            except Exception as error:
-                Log.e("Ho trovato un errore: riga %s %s %s" % (sys.exc_info()[-1].tb_lineno, type(error).__name__, error))
-        else:
-            Elaborator.reader(infos)
-    else:
-        Log.w("Error in bot")
+                if bot["id"] == Manager.get_main_bot_id():
+                    return Foos.status(bot, update)
+
+                return BotsFoos.status(bot, update)
+
+        if infos.user.message.what != "command":
+            return Elaborator.reader(infos)
+
+        if infos.user.message.command == "report":
+            return Foos.report(infos)
+
+        ok = Elaborator.command_reader(infos)
+        if ok != "procedi":
+            return
+        if infos.user.message.pers_command:
+            Elaborator.pers_commands(infos)
+
+    except Exception as error:
+        Log.e("Ho trovato un errore: riga %s %s %s" % (sys.exc_info()[-1].tb_lineno, type(error).__name__, error))
 
 
 def clean_updates(token):
@@ -153,8 +146,3 @@ def detach_bot(token, bid=None):
 def idle():
     while True:
         time.sleep(10)
-
-
-def set_main_bot(token, owner__id):
-    if Manager.add_bot(owner__id, int(token.split(":")[0]), token):
-        attach_bot(token)

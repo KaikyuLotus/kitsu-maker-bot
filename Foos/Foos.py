@@ -15,7 +15,6 @@ from LowLevel import DBs, LowLevel
 from Utils import Logger as Log
 from Core import HTTPLL, Manager, Dialoger
 from Core import ThreadedCore as Core
-from Core.Settings import *
 
 ver = "0.8"
 max_bots = 1000
@@ -44,7 +43,7 @@ def send_message(infos):
         args = infos.text.split(" ")
         HTTPLL.sendMessage(infos.token, args[0], infos.text.replace(args[0], ""))
     except Exception as err:
-        HTTPLL.sendMessage(infos.token, owner_id, str(err))
+        HTTPLL.sendMessage(infos.token, Manager.get_owner_id(), str(err))
 
 
 def myid(infos):
@@ -57,9 +56,9 @@ def help(infos):
             return
 
         string = "%s [@%s] (%s) ha detto:\n%s" % (infos.user.name, infos.user.username, infos.user.uid, infos.text)
-        HTTPLL.sendMessage(infos.token, owner_id, string)
+        HTTPLL.sendMessage(infos.token, Manager.get_owner_id(), string)
     except Exception as err:
-        HTTPLL.sendMessage(infos.token, owner_id, str(err))
+        HTTPLL.sendMessage(infos.token, Manager.get_owner_id(), str(err))
 
 
 def notice(infos):
@@ -68,7 +67,7 @@ def notice(infos):
 
     infos.text = infos.text.replace("[_]", "\n")
 
-    HTTPLL.sendMessage(infos.token, owner_id, infos.text)
+    HTTPLL.sendMessage(infos.token, Manager.get_owner_id(), infos.text)
 
     bids = Manager.get_bots_id()
     for bid in bids:
@@ -79,7 +78,7 @@ def notice(infos):
         except Exception:
             Log.w("%s notice unauth" % uid)
 
-    HTTPLL.sendMessage(infos.token, owner_id, "Avviso importante inviato.")
+    HTTPLL.sendMessage(infos.token, Manager.get_owner_id(), "Avviso importante inviato.")
 
 
 def add_auth(infos):
@@ -119,7 +118,7 @@ def start(infos):
     global max_bots
     if DBs.add_user(infos):
         txt = "Avviato da %s per la prima volta." % infos.user.username
-        Dialoger.send(infos, "", special_text=txt, to_id=owner_id)
+        Dialoger.send(infos, "", special_text=txt, to_id=Manager.get_owner_id())
 
     text = "Benvenuto *%s*, se vuoi utilizzarmi esegui il comando /newbot" % infos.user.name
 
@@ -144,7 +143,7 @@ def newbot(infos):
 
     if infos.text == "token":
         say("Non devi scrivere \"token\", devi darmi la **token** del tuo **bot**.", markdown=True)
-        HTTPLL.sendMessage(infos.token, owner_id, "@%s ha usato /newbot \"token\" lol" % infos.user.username)
+        HTTPLL.sendMessage(infos.token, Manager.get_owner_id(), "@%s ha usato /newbot \"token\" lol" % infos.user.username)
         return
 
     if Manager.get_bot_count() >= max_bots and "!!" not in infos.text:
@@ -189,13 +188,13 @@ def newbot(infos):
 
     msg += "Nome %s\nUsername @%s\nID: %s" % (tbot["first_name"], tbot["username"], tbot["id"])
 
-    HTTPLL.sendMessage(infos.token, owner_id, msg)
+    HTTPLL.sendMessage(infos.token, Manager.get_owner_id(), msg)
     Core.attach_bot(key)
 
 
 def stats(infos):
     t = time.time()
-    if infos.user.uid != owner_id:
+    if infos.user.uid != Manager.get_owner_id():
         return
     text = "In questo momento sto mantenendo online %s bot.\n" % Core.count_bots()
     text += "Il tempo di elaborazione di questo messaggio è di %s ms, " % LowLevel.get_time(t)
@@ -211,8 +210,10 @@ def report(infos):
         if infos.text == "":
             return
 
-        Dialoger.send(infos, None, to_id=infos.prop_id, special_text="Questo bot è stato reportato da Kaikyu per:\n%s" % infos.text)
-        Dialoger.send(infos, None, to_id=owner_id, special_text="Report inviato, master.", special_token=main_bot_token)
+        Dialoger.send(infos, None, to_id=infos.prop_id,
+                      special_text="Questo bot è stato reportato da Kaikyu per:\n%s" % infos.text)
+        Dialoger.send(infos, None, to_id=Manager.get_owner_id(), special_text="Report inviato, master.",
+                      special_token=Manager.get_main_bot_token())
     except Exception as err:
         print(err)
 
@@ -236,16 +237,16 @@ def status(bot, update):
                 text = "Aggiunta a: %s\nUtente: @%s" % (g_name, by)
                 bpht = None  # ToDo Get Propic Method
                 if bpht:
-                    HTTPLL.sendPhoto(main_bot_token, owner_id, bpht, caption=text)
+                    HTTPLL.sendPhoto(Manager.get_main_bot_token(), Manager.get_owner_id(), bpht, caption=text)
                 else:
-                    HTTPLL.sendMessage(main_bot_token, owner_id, text)
+                    HTTPLL.sendMessage(Manager.get_main_bot_token(), Manager.get_owner_id(), text)
 
         elif update["message"]["left_chat_member"]:
             left_user_name = update["message"]["left_chat_member"]['first_name']
             left_user_id = update["message"]["left_chat_member"]['id']
 
             if left_user_id == bot["id"]:
-                HTTPLL.sendMessage(main_bot_token, owner_id, text="Rimossa da: %s\nUtente @%s" % (g_name, by))
+                HTTPLL.sendMessage(Manager.get_main_bot_token(), Manager.get_owner_id(), text="Rimossa da: %s\nUtente @%s" % (g_name, by))
                 Log.a("[%s] Rimossa da un gruppo da %s" % (bot["first_name"], by))
 
     except Exception as err:

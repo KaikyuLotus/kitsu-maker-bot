@@ -9,6 +9,7 @@ from Utils import Logger as Log, Utils
 from Extras import Meteo
 
 
+# ToDo: Split Function
 def action(infos, text, sezione):
     try:
         acts = []

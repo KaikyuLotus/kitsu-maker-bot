@@ -7,11 +7,9 @@ import operator
 import random
 import re
 import threading
-from collections import OrderedDict
-
 import time
-
 import os
+from collections import OrderedDict
 
 from Foos import Commands
 from Utils import Utils, Logger as Log
@@ -21,7 +19,6 @@ from Core.Infos import Infos
 from Core.Dialoger import send
 from Cache import BotCache
 from LowLevel import LowLevel, DBs
-from Core.Settings import *
 
 chars = "abcdefghijklmnopqrstuwxyz"
 
@@ -419,7 +416,7 @@ def extractor(infos):
         return
 
     uid = infos.user.uid
-    if infos.user.uid != owner_id:
+    if infos.user.uid != Manager.get_owner_id():
         if Manager.get_prop_id(infos.token) != uid:
             return
 

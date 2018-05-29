@@ -16,7 +16,7 @@ from Utils import Logger as Log, Utils
 recursivity = {}
 
 
-# Split this function in more methods
+# ToDo: Split this function in more methods
 def send(infos, sezione,
          antispam=True,
          to_id=None,

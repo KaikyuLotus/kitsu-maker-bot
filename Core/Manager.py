@@ -8,6 +8,59 @@ import json
 from Utils import Logger as Log
 from Cache import BotCache
 
+_owner_id = 0
+_main_bot_token = ""
+
+
+def get_lastfm_token():
+    token = json.loads(open("Files/jsons/config.json").read())["lastfm_token"]
+    if token == "TOKEN":
+        Log.critical("imposta la token di lastfm in Files/jsons/config.json")
+        exit()
+    return token
+
+
+def get_main_bot_token():
+    global _main_bot_token
+    if _main_bot_token != "":
+        return _main_bot_token
+
+    _main_bot_token = json.loads(open("Files/jsons/config.json").read())["maker_token"]
+    if _main_bot_token == "TOKEN":
+        Log.critical("imposta la token del bot principale in Files/jsons/config.json")
+        exit()
+
+    bots = get_bots_id()
+    if get_main_bot_id() not in bots:
+        add_bot(get_owner_id(), get_main_bot_id(), _main_bot_token)
+        Log.d("First boot needed to configure, please restart the script.")
+        exit()
+
+    return _main_bot_token
+
+
+def get_main_bot_id():
+    token = get_main_bot_token()
+    if ":" not in token:
+        Log.critical("la token impostata non è valida.")
+        exit()
+    return int(token.split(":")[0])
+
+
+def get_owner_id():
+    global _owner_id
+    if _owner_id == 0:
+        try:
+            _owner_id = int(json.loads(open("Files/jsons/config.json").read())["owner_id"])
+            if _owner_id == 0:
+                Log.e("Errore critico, imposta il tuo ID in Files/jsons/config.json (owner_id)")
+                exit()
+        except:
+            Log.e("Errore critico, l'ID proprietario non è valido.")
+            exit()
+
+    return _owner_id
+
 
 def read_bot_list():
     return json.loads(open("Files/jsons/bots.json").read())
@@ -83,9 +136,9 @@ def add_bot(user_id, bot_id, bot_token):
         if bot_token in bots:
             return False
         bots[bot_token] = new
-        Log.d("Nuovo bot (%s) aggiunto al file bots" % bot_id)
         with open("Files/jsons/bots.json", "w") as fl:
             fl.write(json.dumps(bots))
+        Log.d("Nuovo bot (%s) aggiunto al file bots" % bot_id)
         return True
     except Exception as err:
         Log.e(err)

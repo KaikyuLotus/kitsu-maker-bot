@@ -1,1 +1,4 @@
 [ Error  ] 17:59:03 - [from: add_bot       ] - Errore: '569510835:AAGfajJMZ52Q9oVSxOqc3CtpjpRoYV43bgo' line: ~91
+[ Error  ] 20:59:10 - [from: get_main_bot_token] - Errore: Errore critico, imposta la token del bot principale in Files/jsons/config.json line: ~25
+[CRITICAL] 21:01:22 - [from: get_main_bot_token] - Errore critico: imposta la token del bot principale in Files/jsons/config.json line: ~25
+[ Error  ] 21:16:19 - [from: update_handler] - Errore: Ho trovato un errore: riga 52 KeyError 'new_chat_members' line: ~73

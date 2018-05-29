@@ -13,7 +13,6 @@ from http.server import HTTPServer
 
 from Core import Elaborator, Manager, Infos, HTTPLL
 from Core.Error import ServerError, Unauthorized
-from Core.Settings import *
 
 from Utils import Logger as Log, Utils
 from LowLevel import LowLevel
@@ -93,44 +92,45 @@ def callback(token, data):
 
 
 def update_handler(bot, update):
-    infos = Infos.Infos(bot, update)
-    if infos.error:
-        Log.d("Errore owo!")
-        return
+    try:
+        infos = Infos.Infos(bot, update)
+        if infos.error:
+            return Log.d("Errore owo!")
 
-    if infos.user.uid in json.loads(open("Files/jsons/blacklist.json").read()): return
-    if not infos.error:
+        if infos.user.uid in json.loads(open("Files/jsons/blacklist.json").read()) or infos.skip:
+            return
+
         if "message" in update:
-            try:
-                if "new_chat_members" in update["message"]:
-                    if update["message"]["new_chat_members"] or "left_chat_member" in update["message"]:
-                        if bot["id"] == main_bot_id:
-                            return Foos.status(bot, update)
-                        return BotsFoos.status(bot, update)
-            except Exception as err:
-                Log.e("Ho trovato un errore: riga %s %s %s" % (sys.exc_info()[-1].tb_lineno, type(err).__name__, err))
+            if "new_chat_members" not in update["message"]:
+                return
 
-        if infos.user.message.what == "command":
-            if infos.user.message.command == "report":
-                return Foos.report(infos)
-            try:
-                ok = Elaborator.command_reader(infos)
-                if ok == "procedi":
-                    if infos.user.message.pers_command:
-                        Elaborator.pers_commands(infos)
-            except Exception as error:
-                Log.e("Ho trovato un errore: riga %s %s %s" % (sys.exc_info()[-1].tb_lineno, type(error).__name__, error))
-        else:
-            Elaborator.reader(infos)
-    else:
-        Log.w("Error in bot")
+            if update["message"]["new_chat_members"] or "left_chat_member" in update["message"]:
+                if bot["id"] == Manager.get_main_bot_id():
+                    return Foos.status(bot, update)
+                return BotsFoos.status(bot, update)
+
+        if infos.user.message.what != "command":
+            return Elaborator.reader(infos)
+
+        if infos.user.message.command == "report":
+            return Foos.report(infos)
+
+        ok = Elaborator.command_reader(infos)
+        if ok != "procedi":
+            return
+
+        if infos.user.message.pers_command:
+            return Elaborator.pers_commands(infos)
+
+    except Exception as err:
+        Log.e("Ho trovato un errore: riga %s %s %s" % (sys.exc_info()[-1].tb_lineno, type(err).__name__, err))
 
 
 def run():
     httpd = ThreadedHTTPServer(('', port), S)
     httpd.socket = ssl.wrap_socket(httpd.socket, certfile=certfile, keyfile=ckey, server_side=True)
     Log.i("Starting server, use <Ctrl-C> to stop")
-    HTTPLL.sendMessage("569510835:AAHskMqSa02KAditTfztt3KuHtE9oFQRYGs", 487353090, "Avvio concluso.")
+    HTTPLL.sendMessage(Manager.get_main_bot_token(), Manager.get_owner_id(), "Avvio concluso.")
     try:
         httpd.serve_forever()
     except Exception as err:
@@ -206,6 +206,7 @@ def detach_bot(token, bid=None):
 
     if not token:
         return Log.w("Empty token.")
+
     if token not in BotCache.bots:
         return Log.w("This token is not running.")
 

@@ -10,7 +10,6 @@ from datetime import datetime
 from LowLevel import DBs
 from Utils import Utils, Logger as Log
 from Core import Unreloaded, HTTPLL, Manager
-from Core.Settings import *
 from pprint import pprint
 
 
@@ -188,9 +187,9 @@ class User:
         self.is_to_bot = False
         self.is_admin = False
         self.is_owner = True if Manager.get_prop_id(bot["token"]) == self.uid else False
-        if self.uid == owner_id:
+        if self.uid == Manager.get_owner_id():
             self.is_owner = True
-        self.is_master = True if self.uid == owner_id else False
+        self.is_master = True if self.uid == Manager.get_owner_id() else False
         self.sesso = None
         self.lang_n = 0
 
@@ -273,7 +272,7 @@ class Infos:
             self.to_user = None
             self.is_auto = False
 
-            self.is_kitsu = False if 569510835 != self.bid else True
+            self.is_kitsu = False if Manager.get_main_bot_id() != self.bid else True
 
             if "from" in message:
                 self.user = User(bot, message["from"], message)

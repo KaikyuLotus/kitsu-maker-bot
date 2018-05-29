@@ -3,10 +3,10 @@
 This bot creates chatbots for **Telegram**.
 
 ## Setting Up
-Change values in Core.Settings:
+Change values in Files/jsons/config.json:
 - Set owner_id with your Telegram ID
-- Set main_bot_id with your botmaker ID
-- Set main_bot_token with your botmaker token or set the token in Files/token.txt
+- Set maker_token with your botmaker token
+- Set lastfm_token with a lastfm token (optional)
 
 ## Running
 Run MainKitsu.py
@@ -15,7 +15,7 @@ Run MainKitsu.py
 Please /start your bot at least one time before starting Syntaxer.
 Your main bot actually works as a clone bot too.
 If you want an user to have more than one bot add his username in Foos.limits and how many bots he can have.
-By default it is set to use threaded requests, but, if you have more than 30 bots i suggest you to use the webhook mode.
+By default it is set to use threaded requests, but, if you have more than 30 bots i suggest you to use the webhook mode (sperimental).
 There's a really nice guide on how to use Kitsubots: [here](http://telegra.ph/Come-creare-un-KitsuBot-08-20)
 ...more to come.
 

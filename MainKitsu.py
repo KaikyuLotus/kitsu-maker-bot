@@ -11,21 +11,15 @@
 # 888   Y88b  888 Y88b.       X88 Y88  888 888  888 Y8b.            Y88b  d88P Y88..88P Y88b 888 Y8b.
 # 888    Y88b 888  "Y888  88888P'  "Y88888 888  888  "Y8888          "Y8888P"   "Y88P"   "Y88888  "Y8888
 
-
-from Core import Manager
 from Utils import Logger as Log
+
 from Core import ThreadedCore as Core
+from Core import Manager
 from Core import HTTPLL
-from Core.Settings import *
-
-
-def run():
-    Core.attach_bot(Manager.get_token_list(), clean=True)
-    Core.set_main_bot(main_bot_token, owner_id)
-    HTTPLL.sendMessage(main_bot_token, owner_id, "Booted.")
-    Core.idle()
 
 
 if __name__ == "__main__":
     Log.i("Starting Kitsu, version 3.0.")
-    run()
+    Core.attach_bot(Manager.get_token_list())
+    HTTPLL.sendMessage(Manager.get_main_bot_token(), Manager.get_owner_id(), "Booted.")
+    Core.idle()

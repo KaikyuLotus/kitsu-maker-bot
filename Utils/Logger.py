@@ -50,3 +50,12 @@ def e(text):
     printe("[ Error  ] %s - [from: %s] - Errore: %s line: ~%s" % (lt(), call_elab(inspect.stack()[1][3]), text,
                                                                   inspect.getframeinfo(inspect.stack()[1][0]).lineno))
     return False
+
+
+def critical(text, shutdown=True):
+    text = str(text)
+    printe("[CRITICAL] %s - [from: %s] - Errore critico: %s line: ~%s" % (lt(), call_elab(inspect.stack()[1][3]), text,
+                                                                          inspect.getframeinfo(
+                                                                              inspect.stack()[1][0]).lineno))
+    if shutdown:
+        exit()
