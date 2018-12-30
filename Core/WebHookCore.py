@@ -140,12 +140,8 @@ def run():
 
 def clean_updates(token):
     # Puliamo gli update!
-    updates = HTTPLL.getUpdates(token)
-    if not updates:
-        offsets[token] = 0
-    while updates:
-        offsets[token] = updates[-1]["update_id"] + 1
-        updates = HTTPLL.getUpdates(token, offset=updates[-1]["update_id"] + 1)
+    updates = HTTPLL.getUpdates(token, offset=-1)
+    offsets[token] = updates[-1]["update_id"] + 1 if updates else 0
     # Puliti!
 
 
@@ -154,7 +150,7 @@ def bot_init(token, clean):
     try:
         BotCache.bots[token] = HTTPLL.getMe(token)
         ok = True
-        LowLevel.check_files(Manager.get_botid_from_token(token))
+        LowLevel.check_files(Manager.get_boti\d_from_token(token))
         if clean:
             HTTPLL.deleteWebhook(token)
             clean_updates(token)
